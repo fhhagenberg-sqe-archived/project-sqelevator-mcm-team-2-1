@@ -1,0 +1,11 @@
+- name: Creating a maven build
+# Trigger on push
+on:
+  push:
+    branches:    
+    - '*'
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo Starting build.
+    - uses: PrajjawalBanati/Java_Programs@0.0.1
+    - run: echo Build done.
