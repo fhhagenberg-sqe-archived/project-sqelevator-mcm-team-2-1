@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.fhhagenberg.sqelevator.gui.ElevatorControl"
+            prefHeight="400.0" prefWidth="600.0">
+    <top>
+        <Text text="System Status: Online"/>
+    </top>
+    <left>
+    </left>
+    <center>
+
+        <GridPane>
+            <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
+
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="33.3" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+
+            <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0">
+                <Text text="Elevator 1"/>
+                <TextField id="elev_ctrl_1" fx:id="elev_ctrl_1" promptText="Enter Floor:"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="1">
+                <Text text="Elevator 2"/>
+                <TextField id="elev_ctrl_2" fx:id="elev_ctrl_2" promptText="Enter Floor:"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="2">
+                <Text text="Elevator 3"/>
+                <TextField id="elev_ctrl_3" fx:id="elev_ctrl_3" promptText="Enter Floor:"/>
+            </AnchorPane>
+
+            <AnchorPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+                <Text text="Elevator 4"/>
+                <TextField id="elev_ctrl_1" fx:id="elev_ctrl_4" promptText="Enter Floor:"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <Text text="Elevator 5"/>
+                <TextField id="elev_ctrl_2" fx:id="elev_ctrl_5" promptText="Enter Floor:"/>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1" GridPane.columnIndex="2">
+                <Text text="Elevator 6"/>
+                <TextField id="elev_ctrl_3" fx:id="elev_ctrl_6" promptText="Enter Floor:"/>
+            </AnchorPane>
+
+        </GridPane>
+    </center>
+    <right>
+    </right>
+    <bottom>
+        <Text text="Floor Requests: "/>
+    </bottom>
+</BorderPane>

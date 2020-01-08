@@ -45,3 +45,5 @@
 
 # IntelliJ
 out/
+# Default ignored files
+/workspace.xml

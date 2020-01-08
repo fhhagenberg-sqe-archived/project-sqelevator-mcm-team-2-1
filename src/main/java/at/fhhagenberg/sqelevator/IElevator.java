@@ -51,7 +51,7 @@ package at.fhhagenberg.sqelevator;
  * elevators are allowed to only service certain floors, this can help to achieve greater passenger 
  * service. Every elevator must service the ground floor.</ul>
  * <ul><i>Elevator weight.</i> This provides the current weight of the elevator less the weight of the 
- * empty elevator – hence the weight of the passengers on board. This can be useful for detecting
+ * empty elevator hence the weight of the passengers on board. This can be useful for detecting
  * when the elevator is getting full.</ul>
  * 
  * <p>The elevators can be controlled by setting the following parameters:
@@ -63,7 +63,7 @@ package at.fhhagenberg.sqelevator;
  * is set so that passengers board elevators going in their desired direction. This is indicated by the
  * controller by whether the up or down floor button has been pressed on a given floor. This is
  * an important concept and it should be recognized that in some cases, an elevator may be 
- * going down, for example, but its committed direction is up – reflecting the fact it has been 
+ * going down, for example, but its committed direction is up reflecting the fact it has been
  * dispatched down to pick up a passenger who is traveling up. Whenever an elevator is being
  * dispatched to a target floor, it should have a committed direction set.</ul>
  * <ul><i>Elevator floor service.</i> Sets whether a particular elevator services a particular floor. 
