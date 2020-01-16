@@ -1,29 +1,22 @@
 package at.fhhagenberg.sqelevator;
 
-import java.rmi.Naming;
+import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import sqelevator.IElevator;
+
 import java.rmi.RemoteException;
 
 
-public class ElevatorExample {
+public class ElevatorExample extends Application {
 
   private IElevator controller;
 
   public ElevatorExample(IElevator controller) {
     this.controller = controller;
-  }
-
-  public static void main(String[] args) {
-
-    try {
-      IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
-      ElevatorExample client = new ElevatorExample(controller);
-
-      client.displayElevatorSettings();
-      client.runExample();
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   private void displayElevatorSettings() throws RemoteException {
@@ -120,4 +113,21 @@ public class ElevatorExample {
 
   }
 
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("elevator_control.fxml"));
+    primaryStage.setTitle("Elevator Control 2000");
+    primaryStage.setScene(new Scene(root, 800, 500));
+    primaryStage.show();
+
+    try {
+      IElevator controller = RMIElevatorServiceFetcher.getElevatorService();
+      ElevatorExample client = new ElevatorExample(controller);
+
+      client.displayElevatorSettings();
+      client.runExample();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }
