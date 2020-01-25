@@ -45,6 +45,13 @@
       <version>5.5.2</version>
       <scope>test</scope>
     </dependency>
+    <!-- NOTE: If you are using Intellij, please install the lombok plugin to get rid of any errors from the static analysis -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.10</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

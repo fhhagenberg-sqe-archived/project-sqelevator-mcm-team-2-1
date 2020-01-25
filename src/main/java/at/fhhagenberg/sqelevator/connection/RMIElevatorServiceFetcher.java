@@ -10,7 +10,6 @@ public class RMIElevatorServiceFetcher {
 
     private RMIElevatorServiceFetcher() { }
 
-
     public static IElevator getElevatorService() throws Exception {
         if(rmiInstance!=null) return rmiInstance;
         rmiInstance = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
