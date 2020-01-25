@@ -50,7 +50,6 @@ public class ElevatorController {
             pollButtonsForElevator(tempElevator);
             elevatorSystem.getElevators().put(i, tempElevator);
         }
-        System.out.println("Polling done");
     }
 
     private void getFloorButtonStates() throws RemoteException {
