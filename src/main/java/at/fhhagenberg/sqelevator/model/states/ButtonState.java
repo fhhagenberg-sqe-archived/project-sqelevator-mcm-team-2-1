@@ -1,4 +1,4 @@
-package at.fhhagenberg.sqelevator.model;
+package at.fhhagenberg.sqelevator.model.states;
 
 public enum ButtonState {
     UNSET,

@@ -1,14 +1,14 @@
 package at.fhhagenberg.sqelevator.services;
 
-import at.fhhagenberg.sqelevator.controller.ElevatorController;
+import at.fhhagenberg.sqelevator.controller.ElevatorManagement;
 
 import java.rmi.RemoteException;
 
 public class ElevatorPolling implements Runnable {
 
-    private ElevatorController controller;
+    private ElevatorManagement controller;
 
-    public ElevatorPolling(ElevatorController control) {
+    public ElevatorPolling(ElevatorManagement control) {
         this.controller = control;
     }
 

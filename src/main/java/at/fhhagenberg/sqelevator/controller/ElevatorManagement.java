@@ -1,19 +1,23 @@
 package at.fhhagenberg.sqelevator.controller;
 
-import at.fhhagenberg.sqelevator.model.ButtonState;
+import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
+import at.fhhagenberg.sqelevator.model.states.ButtonState;
+import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqelevator.model.states.DoorStatus;
 import at.fhhagenberg.sqelevator.services.ElevatorPolling;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 //TODO: Create interface for this
-public class ElevatorController {
+public class ElevatorManagement {
 
     private IElevator rmiInstance;
     private ElevatorPolling elevatorPolling;
@@ -21,7 +25,9 @@ public class ElevatorController {
 
     private ElevatorSystem elevatorSystem;
 
-    public ElevatorController(IElevator rmiInstance) {
+    private LinkedList<ElevatorChangeListener> listeners = new LinkedList<>();
+
+    public ElevatorManagement(IElevator rmiInstance) {
         this.rmiInstance = rmiInstance;
         this.elevatorPolling = new ElevatorPolling(this);
         this.elevatorSystem = new ElevatorSystem();
@@ -31,6 +37,7 @@ public class ElevatorController {
     private void initPolling() {
         try {
             long period = this.rmiInstance.getClockTick();
+            if(period != 0) period = 100;
             this.elevatorSystem.setClockTickRate(period);
             scheduler.scheduleAtFixedRate(this.elevatorPolling, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
@@ -44,12 +51,9 @@ public class ElevatorController {
         elevatorSystem.setFloorHeight(rmiInstance.getFloorHeight());
 
         getFloorButtonStates();
+        pollElevators();
 
-        for(int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
-            Elevator tempElevator = pollElevator(i);
-            pollButtonsForElevator(tempElevator);
-            elevatorSystem.getElevators().put(i, tempElevator);
-        }
+        listeners.forEach(listener -> listener.update(elevatorSystem));
     }
 
     private void getFloorButtonStates() throws RemoteException {
@@ -68,14 +72,23 @@ public class ElevatorController {
         }
     }
 
+    private void pollElevators() throws RemoteException {
+        elevatorSystem.setElevators(new HashMap<>());
+        for(int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
+            Elevator tempElevator = pollElevator(i);
+            pollButtonsForElevator(tempElevator);
+            elevatorSystem.getElevators().put(i, tempElevator);
+        }
+    }
+
     private Elevator pollElevator(int i) throws RemoteException {
         Elevator tempElevator = new Elevator();
         tempElevator.setId(i);
         tempElevator.setFloor(rmiInstance.getElevatorFloor(i));
         tempElevator.setPosition(rmiInstance.getElevatorPosition(i));
         tempElevator.setTarget(rmiInstance.getTarget(i));
-        tempElevator.setCommittedDirection(rmiInstance.getCommittedDirection(i));
-        tempElevator.setDoorStatus(rmiInstance.getElevatorDoorStatus(i));
+        tempElevator.setCommittedDirection(CommittedDirection.fromInteger(rmiInstance.getCommittedDirection(i)));
+        tempElevator.setDoorStatus(DoorStatus.fromInteger(rmiInstance.getElevatorDoorStatus(i)));
         tempElevator.setSpeed(rmiInstance.getElevatorSpeed(i));
         tempElevator.setAcceleration(rmiInstance.getElevatorAccel(i));
         tempElevator.setCapacity(rmiInstance.getElevatorCapacity(i));
@@ -88,5 +101,9 @@ public class ElevatorController {
         for(int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
             elevator.getButtons().put(floor, rmiInstance.getElevatorButton(elevator.getId(), floor));
         }
+    }
+
+    public void addListener(ElevatorChangeListener listener) {
+        listeners.add(listener);
     }
 }

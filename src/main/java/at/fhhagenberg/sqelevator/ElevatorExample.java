@@ -1,7 +1,8 @@
 package at.fhhagenberg.sqelevator;
 
 import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
-import at.fhhagenberg.sqelevator.controller.ElevatorController;
+import at.fhhagenberg.sqelevator.controller.ElevatorManagement;
+import at.fhhagenberg.sqelevator.gui.ElevatorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,20 +10,25 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 
-import java.rmi.RemoteException;
-
 
 public class ElevatorExample extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("dashboard.fxml"));
-    primaryStage.setTitle("Elevator Control 2000");
-    primaryStage.setScene(new Scene(root, 1600, 900));
-    primaryStage.show();
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("elevator.fxml"));
+
+
     try {
       IElevator rmiInstance = RMIElevatorServiceFetcher.getElevatorService();
-      ElevatorController controller = new ElevatorController(rmiInstance);
+      ElevatorManagement management = new ElevatorManagement(rmiInstance);
+
+      Parent root = (Parent)fxmlLoader.load();
+      ElevatorController controller = fxmlLoader.<ElevatorController>getController();
+      management.addListener(controller);
+
+      primaryStage.setTitle("Elevator Control 2000");
+      primaryStage.setScene(new Scene(root, 1600, 900));
+      primaryStage.show();
     } catch (Exception e) {
       e.printStackTrace();
     }

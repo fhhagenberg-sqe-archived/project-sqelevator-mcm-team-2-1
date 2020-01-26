@@ -1,5 +1,7 @@
 package at.fhhagenberg.sqelevator.model;
 
+import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
+import at.fhhagenberg.sqelevator.model.states.DoorStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,8 +14,8 @@ public class Elevator {
     private int floor;
     private int position;
     private int target;
-    private int committedDirection;
-    private int doorStatus;
+    private CommittedDirection committedDirection;
+    private DoorStatus doorStatus;
     private int speed;
     private int acceleration;
     private int capacity;

@@ -1,5 +1,6 @@
 package at.fhhagenberg.sqelevator.model;
 
+import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
