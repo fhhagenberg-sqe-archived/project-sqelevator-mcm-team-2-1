@@ -16,10 +16,10 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.layout.FlowPane?>
-<BorderPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.1"
+<BorderPane prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhhagenberg.sqelevator.gui.DashboardController">
     <center>
-        <FlowPane fx:id="dashBoard" vgap="5" hgap="5">
+        <FlowPane fx:id="dashBoard" prefWrapLength="400" maxWidth="1200" vgap="20">
         </FlowPane>
     </center>
 </BorderPane>

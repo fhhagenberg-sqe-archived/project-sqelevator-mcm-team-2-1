@@ -11,7 +11,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.fhhagenberg.sqelevator.gui.ElevatorController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="400.0">
 
     <BorderPane>
         <top>
@@ -44,6 +44,9 @@
                 </HBox>
 
                 <StackPane layoutX="34.0" layoutY="42.5" fx:id="gridContainer">
+                </StackPane>
+
+                <StackPane layoutX="144.0" layoutY="42.5" fx:id="elevatorBtnsContainer">
                 </StackPane>
 
                 <!-- Status texts (speed etc) -->
@@ -87,9 +90,4 @@
             </AnchorPane>
         </center>
     </BorderPane>
-
-    <padding>
-        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
-    </padding>
-
 </AnchorPane>

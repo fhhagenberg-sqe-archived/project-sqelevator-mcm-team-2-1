@@ -121,11 +121,18 @@ public class ElevatorManagement implements UIActionListener {
 
     @Override
     public void changeCommittedDirection(int elevator, CommittedDirection direction) {
+        //TODO: Christoph, change the logic for this based on the automatic mode
+        //Is hardcoded now for the manual mode
         try {
             this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
         } catch (RemoteException e) {
             System.err.println("Could not set committed direction");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setServicedFloor(int elevator, int floor, boolean serviced) {
+        //TODO: Christoph, implement this
     }
 }
