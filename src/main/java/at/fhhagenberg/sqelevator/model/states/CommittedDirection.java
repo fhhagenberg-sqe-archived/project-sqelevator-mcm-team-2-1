@@ -18,10 +18,9 @@ public enum CommittedDirection {
                 return UP;
             case 1:
                 return DOWN;
-            case 2:
+            default:
                 return UNCOMMITTED;
         }
-        return UNCOMMITTED;
     }
 
     public String getPrintValue() {

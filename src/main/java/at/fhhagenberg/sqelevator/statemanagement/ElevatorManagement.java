@@ -53,8 +53,6 @@ public class ElevatorManagement implements UIActionListener {
         getFloorButtonStates();
         pollElevators();
 
-        //System.out.println(elevatorSystem.getElevators().get(0).getWeight());
-
         listeners.forEach(listener -> listener.update(elevatorSystem));
     }
 
@@ -114,7 +112,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setTarget(elevator, floor);
         } catch (RemoteException e) {
-            System.err.println("Could not set elevator target");
+            System.out.println("Could not set elevator target");
             e.printStackTrace();
         }
     }
@@ -126,7 +124,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
         } catch (RemoteException e) {
-            System.err.println("Could not set committed direction");
+            System.out.println("Could not set committed direction");
             e.printStackTrace();
         }
     }

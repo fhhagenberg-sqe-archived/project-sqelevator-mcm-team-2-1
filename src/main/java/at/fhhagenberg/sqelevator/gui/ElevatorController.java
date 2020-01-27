@@ -149,7 +149,7 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
             elevatorImage.setFitHeight(28);
             elevatorImage.setFitWidth(28);
         } catch (FileNotFoundException e) {
-            System.err.println("Image not found");
+            System.out.println("Image not found");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

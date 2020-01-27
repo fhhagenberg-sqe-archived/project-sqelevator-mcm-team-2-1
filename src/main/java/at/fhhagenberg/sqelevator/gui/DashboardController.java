@@ -33,7 +33,7 @@ public class DashboardController implements ElevatorSystemChangeListener {
     }
 
     private void initPane(ElevatorSystem system) {
-        ArrayList<Node> nodes = new ArrayList<Node>();
+        ArrayList<Node> nodes = new ArrayList<>();
         try {
             int elevatorCount = system.getElevators().keySet().size();
             for (int i = 0; i < elevatorCount; i++) {
@@ -47,7 +47,7 @@ public class DashboardController implements ElevatorSystemChangeListener {
             Platform.runLater(() -> dashBoard.getChildren().addAll(nodes));
         } catch (IOException exception) {
             exception.printStackTrace();
-            System.err.println("Error creating controllers");
+            System.out.println("Error creating controllers");
         }
 
     }
