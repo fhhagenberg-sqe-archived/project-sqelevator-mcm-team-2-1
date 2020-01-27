@@ -1,6 +1,6 @@
 package at.fhhagenberg.sqelevator.services;
 
-import at.fhhagenberg.sqelevator.controller.ElevatorManagement;
+import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 
 import java.rmi.RemoteException;
 

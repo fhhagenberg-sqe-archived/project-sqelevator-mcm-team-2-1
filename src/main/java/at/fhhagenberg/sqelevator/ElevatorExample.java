@@ -1,8 +1,8 @@
 package at.fhhagenberg.sqelevator;
 
 import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
-import at.fhhagenberg.sqelevator.controller.ElevatorManagement;
-import at.fhhagenberg.sqelevator.gui.ElevatorController;
+import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
+import at.fhhagenberg.sqelevator.gui.DashboardController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,17 +15,15 @@ public class ElevatorExample extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("elevator.fxml"));
-
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dashboard.fxml"));
 
     try {
       IElevator rmiInstance = RMIElevatorServiceFetcher.getElevatorService();
       ElevatorManagement management = new ElevatorManagement(rmiInstance);
-
       Parent root = (Parent)fxmlLoader.load();
-      ElevatorController controller = fxmlLoader.<ElevatorController>getController();
-      controller.setUiActionListener(management);
+      DashboardController controller = fxmlLoader.<DashboardController>getController();
       management.addListener(controller);
+      controller.setUiListener(management);
 
       primaryStage.setTitle("Elevator Control 2000");
       primaryStage.setScene(new Scene(root, 1600, 900));

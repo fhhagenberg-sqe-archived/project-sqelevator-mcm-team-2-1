@@ -1,6 +1,6 @@
-package at.fhhagenberg.sqelevator.controller;
+package at.fhhagenberg.sqelevator.statemanagement;
 
-import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
+import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
 import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
@@ -25,7 +25,7 @@ public class ElevatorManagement implements UIActionListener {
 
     private ElevatorSystem elevatorSystem;
 
-    private LinkedList<ElevatorChangeListener> listeners = new LinkedList<>();
+    private LinkedList<ElevatorSystemChangeListener> listeners = new LinkedList<>();
 
     public ElevatorManagement(IElevator rmiInstance) {
         this.rmiInstance = rmiInstance;
@@ -105,7 +105,7 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
-    public void addListener(ElevatorChangeListener listener) {
+    public void addListener(ElevatorSystemChangeListener listener) {
         listeners.add(listener);
     }
 

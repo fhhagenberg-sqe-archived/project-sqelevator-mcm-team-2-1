@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqelevator.gui;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
+import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
 import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
@@ -67,25 +68,6 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         }
     }
 
-    @Override
-    public void update(ElevatorSystem system) {
-        //TODO: better threading!
-        Platform.runLater(() -> {
-            elevator = system.getElevators().get(0);
-            if(elevator!=null) {
-                maxFloor = system.getFloorCount();
-                elevatorName.setText("Elevator " + elevator.getId());
-                elevatorDirection.setText(elevator.getCommittedDirection().getPrintValue());
-                speed.setText(elevator.getSpeed() + " ft/s");
-                acceleration.setText("Max: " + elevator.getAcceleration() + "ft/s²");
-                weight.setText(elevator.getWeight() + " kg");
-                doorStatus.setText(elevator.getDoorStatus().getPrintValue());
-                updateElevatorGrid(system); // TODO: Only redraw things that change
-            }
-        });
-
-    }
-
     private void updateElevatorGrid(ElevatorSystem elevatorSystem) {
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true); //TODO: Use css instead, as this is reserved for debugging purposes
@@ -94,7 +76,11 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
 
         for(int i = elevatorSystem.getFloorCount()-1; i >=0; i--) {
             Text levelText = new Text();
-            levelText.setText(String.valueOf(i+1) + "   " + elevatorSystem.getFloorButtons().get(i).getPrintValue());
+
+            if(elevatorSystem.getFloorButtons().get(i)!=null) {
+                levelText.setText(String.valueOf(i+1) + "   " + elevatorSystem.getFloorButtons().get(i).getPrintValue());
+            }
+
             gridPane.add(levelText, 0, elevatorSystem.getFloorCount()-1-i);
 
             StackPane placeholder = new StackPane();
@@ -124,5 +110,23 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(ElevatorSystem system, int elevatorId) {
+        //TODO: better threading!
+        Platform.runLater(() -> {
+            if(system!=null && system.getElevators().get(elevatorId)!=null) {
+                this.elevator = system.getElevators().get(elevatorId);
+                maxFloor = system.getFloorCount();
+                elevatorName.setText("Elevator " + elevator.getId());
+                elevatorDirection.setText(elevator.getCommittedDirection().getPrintValue());
+                speed.setText(elevator.getSpeed() + " ft/s");
+                acceleration.setText("Max: " + elevator.getAcceleration() + "ft/s²");
+                weight.setText(elevator.getWeight() + " kg");
+                doorStatus.setText(elevator.getDoorStatus().getPrintValue());
+                updateElevatorGrid(system); // TODO: Only redraw things that change
+            }
+        });
     }
 }
