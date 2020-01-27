@@ -7,7 +7,8 @@ import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
-import at.fhhagenberg.sqelevator.services.ElevatorPolling;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
 
@@ -21,8 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class ElevatorManagement implements UIActionListener {
 
     private IElevator rmiInstance;
-    private ElevatorPolling elevatorPolling;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private ElevatorSystem elevatorSystem;
 
@@ -30,9 +30,14 @@ public class ElevatorManagement implements UIActionListener {
 
     public ElevatorManagement(IElevator rmiInstance) {
         this.rmiInstance = rmiInstance;
-        this.elevatorPolling = new ElevatorPolling(this);
         this.elevatorSystem = new ElevatorSystem();
         initPolling();
+    }
+
+    ElevatorManagement(IElevator rmiInstance, Boolean polling) {
+        this.rmiInstance = rmiInstance;
+        this.elevatorSystem = new ElevatorSystem();
+        if(polling) initPolling();
     }
 
     private void initPolling() {
@@ -40,21 +45,26 @@ public class ElevatorManagement implements UIActionListener {
             long period = this.rmiInstance.getClockTick();
             if(period == 0) period = 100;
             this.elevatorSystem.setClockTickRate(period);
-            scheduler.scheduleAtFixedRate(this.elevatorPolling, 1, period, TimeUnit.MILLISECONDS);
+            scheduler.scheduleAtFixedRate(this::pollElevatorSystem, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
         }
     }
 
-    public void pollElevatorSystem() throws RemoteException {
-        elevatorSystem.setElevatorCount(rmiInstance.getElevatorNum());
-        elevatorSystem.setFloorCount(rmiInstance.getFloorNum());
-        elevatorSystem.setFloorHeight(rmiInstance.getFloorHeight());
+    public void pollElevatorSystem() {
+        try {
+            elevatorSystem.setElevatorCount(rmiInstance.getElevatorNum());
+            elevatorSystem.setFloorCount(rmiInstance.getFloorNum());
+            elevatorSystem.setFloorHeight(rmiInstance.getFloorHeight());
 
-        getFloorButtonStates();
-        pollElevators();
+            getFloorButtonStates();
+            pollElevators();
 
-        listeners.forEach(listener -> listener.update(elevatorSystem));
+            listeners.forEach(listener -> listener.update(elevatorSystem));
+        } catch (RemoteException e) {
+            LoggerFactory.getLogger(ElevatorManagement.class).error("RMI could not be polled", e);
+        }
+
     }
 
     private void getFloorButtonStates() throws RemoteException {
