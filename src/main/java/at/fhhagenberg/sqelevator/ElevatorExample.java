@@ -1,17 +1,21 @@
 package at.fhhagenberg.sqelevator;
 
 import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
-import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 import at.fhhagenberg.sqelevator.gui.DashboardController;
+import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
 
 
 public class ElevatorExample extends Application {
+
+  private static Logger logger = LoggerFactory.getLogger(ElevatorExample.class);
 
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -29,7 +33,7 @@ public class ElevatorExample extends Application {
       primaryStage.setScene(new Scene(root, 1600, 900));
       primaryStage.show();
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error("Error booting up the application", e);
     }
   }
 

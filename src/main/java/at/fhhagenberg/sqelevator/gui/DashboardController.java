@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.FlowPane;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +47,7 @@ public class DashboardController implements ElevatorSystemChangeListener {
             }
             Platform.runLater(() -> dashBoard.getChildren().addAll(nodes));
         } catch (IOException exception) {
-            exception.printStackTrace();
-            System.out.println("Error creating controllers");
+            LoggerFactory.getLogger(DashboardController.class).error("Error creating controllers", exception);
         }
 
     }

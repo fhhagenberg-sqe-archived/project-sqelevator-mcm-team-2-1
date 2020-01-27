@@ -2,12 +2,13 @@ package at.fhhagenberg.sqelevator.statemanagement;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
 import at.fhhagenberg.sqelevator.communication.UIActionListener;
-import at.fhhagenberg.sqelevator.model.states.ButtonState;
-import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
+import at.fhhagenberg.sqelevator.model.states.ButtonState;
+import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
 import at.fhhagenberg.sqelevator.services.ElevatorPolling;
+import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
@@ -41,7 +42,7 @@ public class ElevatorManagement implements UIActionListener {
             this.elevatorSystem.setClockTickRate(period);
             scheduler.scheduleAtFixedRate(this.elevatorPolling, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
         }
     }
 
@@ -112,8 +113,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setTarget(elevator, floor);
         } catch (RemoteException e) {
-            System.out.println("Could not set elevator target");
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
         }
     }
 
@@ -124,8 +124,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
         } catch (RemoteException e) {
-            System.out.println("Could not set committed direction");
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
         }
     }
 

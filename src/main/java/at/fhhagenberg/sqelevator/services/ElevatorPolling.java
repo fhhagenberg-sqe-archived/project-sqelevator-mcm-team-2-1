@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqelevator.services;
 
 import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
+import org.slf4j.LoggerFactory;
 
 import java.rmi.RemoteException;
 
@@ -17,7 +18,7 @@ public class ElevatorPolling implements Runnable {
         try {
             this.controller.pollElevatorSystem();
         } catch (RemoteException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorPolling.class).error("RMI could not be polled", e);
         }
     }
 }

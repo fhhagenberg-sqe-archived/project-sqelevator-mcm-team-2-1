@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -149,10 +150,9 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
             elevatorImage.setFitHeight(28);
             elevatorImage.setFitWidth(28);
         } catch (FileNotFoundException e) {
-            System.out.println("Image not found");
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorController.class).error("File not found", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LoggerFactory.getLogger(ElevatorController.class).error("Image could not be loaded", e);
         }
     }
 }
