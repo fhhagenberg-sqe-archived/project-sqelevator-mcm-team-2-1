@@ -37,7 +37,7 @@ public class ElevatorManagement {
     private void initPolling() {
         try {
             long period = this.rmiInstance.getClockTick();
-            if(period != 0) period = 100;
+            if(period == 0) period = 100;
             this.elevatorSystem.setClockTickRate(period);
             scheduler.scheduleAtFixedRate(this.elevatorPolling, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
@@ -52,6 +52,8 @@ public class ElevatorManagement {
 
         getFloorButtonStates();
         pollElevators();
+
+        //System.out.println(elevatorSystem.getElevators().get(0).getWeight());
 
         listeners.forEach(listener -> listener.update(elevatorSystem));
     }
