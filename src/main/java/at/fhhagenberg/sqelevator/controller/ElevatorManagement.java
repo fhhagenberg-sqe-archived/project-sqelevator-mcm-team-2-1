@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqelevator.controller;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
+import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.Elevator;
@@ -16,8 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-//TODO: Create interface for this
-public class ElevatorManagement {
+public class ElevatorManagement implements UIActionListener {
 
     private IElevator rmiInstance;
     private ElevatorPolling elevatorPolling;
@@ -107,5 +107,25 @@ public class ElevatorManagement {
 
     public void addListener(ElevatorChangeListener listener) {
         listeners.add(listener);
+    }
+
+    @Override
+    public void floorSelected(int elevator, int floor) {
+        try {
+            this.rmiInstance.setTarget(elevator, floor);
+        } catch (RemoteException e) {
+            System.err.println("Could not set elevator target");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void changeCommittedDirection(int elevator, CommittedDirection direction) {
+        try {
+            this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
+        } catch (RemoteException e) {
+            System.err.println("Could not set committed direction");
+            e.printStackTrace();
+        }
     }
 }

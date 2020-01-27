@@ -24,6 +24,7 @@ public class ElevatorExample extends Application {
 
       Parent root = (Parent)fxmlLoader.load();
       ElevatorController controller = fxmlLoader.<ElevatorController>getController();
+      controller.setUiActionListener(management);
       management.addListener(controller);
 
       primaryStage.setTitle("Elevator Control 2000");

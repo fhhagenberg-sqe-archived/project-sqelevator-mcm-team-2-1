@@ -1,13 +1,15 @@
 package at.fhhagenberg.sqelevator.model.states;
 
 public enum CommittedDirection {
-    UP("Up"),
-    DOWN("Down"),
-    UNCOMMITTED("Uncommitted");
+    UP("Up", 0),
+    DOWN("Down", 1),
+    UNCOMMITTED("Uncommitted", 2);
     private String printValue;
+    private Integer rawValue;
 
-    CommittedDirection(String text) {
+    CommittedDirection(String text, Integer rawValue) {
         printValue = text;
+        this.rawValue = rawValue;
     }
 
     public static CommittedDirection fromInteger(int x) {
@@ -24,5 +26,9 @@ public enum CommittedDirection {
 
     public String getPrintValue() {
         return printValue;
+    }
+
+    public Integer getRawValue() {
+        return rawValue;
     }
 }
