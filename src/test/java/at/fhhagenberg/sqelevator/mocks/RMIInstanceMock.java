@@ -16,7 +16,7 @@ public class RMIInstanceMock implements IElevator {
         elevator1 = Elevator.builder()
                 .id(0)
                 .acceleration(10)
-                .speed(5)
+                .speed(0)
                 .capacity(10)
                 .floor(0)
                 .position(0)
@@ -24,7 +24,7 @@ public class RMIInstanceMock implements IElevator {
                 .doorStatus(DoorStatus.OPEN)
                 .target(0)
                 .buttons(new HashMap<>())
-                .committedDirection(CommittedDirection.UP)
+                .committedDirection(CommittedDirection.UNCOMMITTED)
                 .build();
     }
     @Override

@@ -1,5 +1,7 @@
-package at.fhhagenberg.sqelevator.gui;
+package at.fhhagenberg.sqelevator.integration;
 
+import at.fhhagenberg.sqelevator.communication.UIActionListener;
+import at.fhhagenberg.sqelevator.gui.DashboardController;
 import at.fhhagenberg.sqelevator.mocks.RMIInstanceMock;
 import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 import com.sun.tools.javac.Main;
@@ -26,7 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 // This is also an integration test between ElevatorManagement and the DashboardController
-public class DashboardControllerTest extends ApplicationTest {
+public class DashboardElevatorIntegrationTest extends ApplicationTest {
     private DashboardController controller;
 
     private IElevator rmiMock;
@@ -57,8 +59,15 @@ public class DashboardControllerTest extends ApplicationTest {
         management.addListener(controller);
     }
 
+    /**
+     * This test asserts if the initialization of the elevator system after the first update works as expected
+     * @throws InterruptedException
+     */
     @Test
     public void elevatorSystemFirstUpdateTest() throws InterruptedException {
+        UIActionListener mockListener = Mockito.mock(UIActionListener.class);
+
+        controller.setUiListener(mockListener);
         assertFalse(controller.isInitialized());
         assertEquals(0, controller.getElevators().size());
         management.pollElevatorSystem();
@@ -67,10 +76,11 @@ public class DashboardControllerTest extends ApplicationTest {
         assertEquals(1, controller.getElevators().size());
         waitForRunLater();
         assertNotNull(controller.getElevators().get(0).getElevator());
+        assertEquals(mockListener, controller.getElevators().get(0).getUiActionListener());
     }
 
 
-    public void waitForRunLater() throws InterruptedException {
+    private void waitForRunLater() throws InterruptedException {
         Semaphore semaphore = new Semaphore(0);
         Platform.runLater(semaphore::release);
         semaphore.acquire();

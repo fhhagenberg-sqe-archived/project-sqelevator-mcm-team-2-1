@@ -52,13 +52,13 @@ public class ElevatorManagmentPollTest {
         assertNotNull(resultElevator);
         assertEquals(0, resultElevator.getId());
         assertEquals(10, resultElevator.getAcceleration());
-        assertEquals(5, resultElevator.getSpeed());
+        assertEquals(0, resultElevator.getSpeed());
         assertEquals(10, resultElevator.getCapacity());
         assertEquals(0, resultElevator.getFloor());
         assertEquals(0, resultElevator.getPosition());
         assertEquals(10, resultElevator.getWeight());
         assertEquals(DoorStatus.OPEN, resultElevator.getDoorStatus());
         assertEquals(0, resultElevator.getTarget());
-        assertEquals(CommittedDirection.UP, resultElevator.getCommittedDirection());
+        assertEquals(CommittedDirection.UNCOMMITTED, resultElevator.getCommittedDirection());
     }
 }

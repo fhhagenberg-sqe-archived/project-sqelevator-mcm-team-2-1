@@ -42,6 +42,7 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
 
     private ImageView elevatorImage = null;
 
+    @Getter
     private UIActionListener uiActionListener;
     private int maxFloor;
 

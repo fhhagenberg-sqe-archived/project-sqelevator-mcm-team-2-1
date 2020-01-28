@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class DashboardController implements ElevatorSystemChangeListener {
     private boolean initialized = false;
     @Getter
     private HashMap<Integer, ElevatorController> elevators = new HashMap<>();
-
+    @Setter
     private UIActionListener uiListener;
 
     @Override
@@ -52,9 +53,5 @@ public class DashboardController implements ElevatorSystemChangeListener {
             LoggerFactory.getLogger(DashboardController.class).error("Error creating controllers", exception);
         }
 
-    }
-
-    public void setUiListener(UIActionListener uiListener) {
-        this.uiListener = uiListener;
     }
 }
