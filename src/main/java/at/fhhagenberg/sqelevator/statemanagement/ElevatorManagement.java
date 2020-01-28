@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ElevatorManagement implements UIActionListener {
 
+    public static final String RMI_ERROR = "Error invoking RMI method";
+
     private IElevator rmiInstance;
     @Getter
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -38,7 +40,7 @@ public class ElevatorManagement implements UIActionListener {
         initPolling();
     }
 
-    public ElevatorManagement(IElevator rmiInstance, Boolean polling) {
+    public ElevatorManagement(IElevator rmiInstance, boolean polling) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
         if(polling) initPolling();
@@ -51,7 +53,7 @@ public class ElevatorManagement implements UIActionListener {
             this.elevatorSystem.setClockTickRate(period);
             future = scheduler.scheduleAtFixedRate(this::pollElevatorSystem, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
-            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
+            LoggerFactory.getLogger(ElevatorManagement.class).error(RMI_ERROR, e);
         }
     }
 
@@ -127,7 +129,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setTarget(elevator, floor);
         } catch (RemoteException e) {
-            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
+            LoggerFactory.getLogger(ElevatorManagement.class).error(RMI_ERROR, e);
         }
     }
 
@@ -138,7 +140,7 @@ public class ElevatorManagement implements UIActionListener {
         try {
             this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
         } catch (RemoteException e) {
-            LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
+            LoggerFactory.getLogger(ElevatorManagement.class).error(RMI_ERROR, e);
         }
     }
 
