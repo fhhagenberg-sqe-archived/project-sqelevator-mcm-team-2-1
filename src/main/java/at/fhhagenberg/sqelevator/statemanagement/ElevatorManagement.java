@@ -24,6 +24,7 @@ public class ElevatorManagement implements UIActionListener {
     private IElevator rmiInstance;
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    @Getter
     private ElevatorSystem elevatorSystem;
 
     private LinkedList<ElevatorSystemChangeListener> listeners = new LinkedList<>();

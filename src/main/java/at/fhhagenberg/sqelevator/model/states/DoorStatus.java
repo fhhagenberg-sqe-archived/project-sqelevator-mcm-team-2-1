@@ -1,14 +1,16 @@
 package at.fhhagenberg.sqelevator.model.states;
 
 public enum DoorStatus {
-    OPEN("Open"),
-    CLOSED("Closed"),
-    UNDEFINED("Undefined");
+    OPEN("Open", 1),
+    CLOSED("Closed", 2),
+    UNDEFINED("Undefined", 0);
 
     private String printValue;
+    private int rawValue;
 
-    DoorStatus(String text) {
+    DoorStatus(String text, int rawValue) {
         printValue = text;
+        this.rawValue = rawValue;
     }
 
     public static DoorStatus fromInteger(int x) {
@@ -24,5 +26,9 @@ public enum DoorStatus {
 
     public String getPrintValue() {
         return printValue;
+    }
+
+    public int getRawValue() {
+        return rawValue;
     }
 }

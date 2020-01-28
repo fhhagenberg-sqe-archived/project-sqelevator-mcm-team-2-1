@@ -8,8 +8,11 @@ public class DoorStatusTest {
     @Test
     public void testTextMapping() {
         assertEquals("Closed", DoorStatus.CLOSED.getPrintValue());
+        assertEquals(2, DoorStatus.CLOSED.getRawValue());
         assertEquals("Undefined", DoorStatus.UNDEFINED.getPrintValue());
+        assertEquals(0, DoorStatus.UNDEFINED.getRawValue());
         assertEquals("Open", DoorStatus.OPEN.getPrintValue());
+        assertEquals(1, DoorStatus.OPEN.getRawValue());
     }
 
     @Test

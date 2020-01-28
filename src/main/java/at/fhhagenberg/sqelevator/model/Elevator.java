@@ -2,13 +2,17 @@ package at.fhhagenberg.sqelevator.model;
 
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Elevator {
     private int id;
     private int floor;

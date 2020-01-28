@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
 import static org.mockito.Mockito.*;
 
 
-public class ElevatorManagementTest {
+public class ElevatorManagementTest{
     @Mock
     IElevator rmiInstance;
 
