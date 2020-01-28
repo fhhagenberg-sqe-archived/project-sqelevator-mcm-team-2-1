@@ -14,9 +14,10 @@ jobs:
       with:
         java-version: 1.13
     - name: Build with Maven
+      # https://stackoverflow.com/questions/58724883/github-actions-unable-to-open-display-during-tests-with-javafx-13
       run: xvfb-run mvn -B package --file pom.xml #this should fix the error that the gui can not be displayed
     - name: SonarCloud
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn clean verify sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+      run: xvfb-run mvn clean verify sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
