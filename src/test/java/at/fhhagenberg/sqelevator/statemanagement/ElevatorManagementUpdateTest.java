@@ -1,15 +1,16 @@
 package at.fhhagenberg.sqelevator.statemanagement;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
+import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mockito.Mockito.*;
 
@@ -28,13 +29,17 @@ public class ElevatorManagementUpdateTest {
 
     @Test
     void testNotifications() {
+        AtomicReference<ElevatorSystem> expectedResult = new AtomicReference<>();
+        ElevatorSystemChangeListener temp = expectedResult::set; // To verify that all listeners are receiving the same obj
+
         ElevatorSystemChangeListener mock = mock(ElevatorSystemChangeListener.class);
         ElevatorSystemChangeListener mock2 = mock(ElevatorSystemChangeListener.class);
+        elevatorManagement.addListener(temp);
         elevatorManagement.addListener(mock);
         elevatorManagement.addListener(mock2);
         elevatorManagement.pollElevatorSystem();
-        verify(mock, times(1)).update(any());
-        verify(mock2, times(1)).update(any());
+        verify(mock, times(1)).update(expectedResult.get());
+        verify(mock2, times(1)).update(expectedResult.get());
     }
 
     @Test

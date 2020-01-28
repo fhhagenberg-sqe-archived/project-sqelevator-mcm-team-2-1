@@ -9,28 +9,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.FlowPane;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 public class DashboardController implements ElevatorSystemChangeListener {
     @FXML
     public FlowPane dashBoard;
+    @Getter
     private boolean initialized = false;
-
+    @Getter
     private HashMap<Integer, ElevatorController> elevators = new HashMap<>();
 
     private UIActionListener uiListener;
 
     @Override
     public void update(ElevatorSystem system) {
-        elevators.keySet().forEach(id -> elevators.get(id).update(system, id));
         if (!initialized) {
             this.initPane(system);
             initialized = true;
         }
+        elevators.keySet().forEach(id -> elevators.get(id).update(system, id));
     }
 
     private void initPane(ElevatorSystem system) {

@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import lombok.Getter;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
@@ -44,6 +45,7 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
     private UIActionListener uiActionListener;
     private int maxFloor;
 
+    @Getter
     private Elevator elevator;
 
     public void setUiActionListener(UIActionListener uiActionListener) {

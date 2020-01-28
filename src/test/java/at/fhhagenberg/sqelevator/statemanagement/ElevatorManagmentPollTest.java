@@ -1,6 +1,6 @@
 package at.fhhagenberg.sqelevator.statemanagement;
 
-import at.fhhagenberg.sqelevator.RMIInstanceMock;
+import at.fhhagenberg.sqelevator.mocks.RMIInstanceMock;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;

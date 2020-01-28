@@ -38,7 +38,7 @@ public class ElevatorManagement implements UIActionListener {
         initPolling();
     }
 
-    ElevatorManagement(IElevator rmiInstance, Boolean polling) {
+    public ElevatorManagement(IElevator rmiInstance, Boolean polling) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
         if(polling) initPolling();
