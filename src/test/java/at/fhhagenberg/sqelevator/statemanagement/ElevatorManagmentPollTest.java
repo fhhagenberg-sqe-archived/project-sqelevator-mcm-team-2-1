@@ -30,6 +30,7 @@ public class ElevatorManagmentPollTest {
         elevatorManagement.pollElevatorSystem();
         ElevatorSystem result = elevatorManagement.getElevatorSystem();
 
+        assertEquals(100, result.getClockTickRate());
         assertEquals(1, result.getElevatorCount());
         assertEquals(10, result.getFloorHeight());
         assertEquals(10, result.getFloorCount());

@@ -17,13 +17,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class ElevatorManagement implements UIActionListener {
 
     private IElevator rmiInstance;
+    @Getter
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
+    @Getter
+    private ScheduledFuture future = null;
     @Getter
     private ElevatorSystem elevatorSystem;
 
@@ -46,7 +49,7 @@ public class ElevatorManagement implements UIActionListener {
             long period = this.rmiInstance.getClockTick();
             if(period == 0) period = 100;
             this.elevatorSystem.setClockTickRate(period);
-            scheduler.scheduleAtFixedRate(this::pollElevatorSystem, 1, period, TimeUnit.MILLISECONDS);
+            future = scheduler.scheduleAtFixedRate(this::pollElevatorSystem, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error("Error invoking RMI method", e);
         }
