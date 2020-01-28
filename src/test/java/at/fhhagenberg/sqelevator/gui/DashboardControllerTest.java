@@ -72,8 +72,7 @@ public class DashboardControllerTest extends ApplicationTest {
 
     public void waitForRunLater() throws InterruptedException {
         Semaphore semaphore = new Semaphore(0);
-        Platform.runLater(() -> semaphore.release());
+        Platform.runLater(semaphore::release);
         semaphore.acquire();
-
     }
 }
