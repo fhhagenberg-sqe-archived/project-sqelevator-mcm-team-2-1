@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,6 +72,7 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         management.pollElevatorSystem();
         waitForRunLater();
 
+        // Check general elevator status
         ElevatorController displayedElevator = controller.getElevators().get(0);
         assertEquals("Elevator 1", displayedElevator.elevatorName.getText().trim());
         assertEquals("10 kg", displayedElevator.weight.getText().trim());
@@ -78,15 +80,27 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         assertEquals("Max: 10ft/s²", displayedElevator.acceleration.getText().trim());
         assertEquals(DoorStatus.OPEN.getPrintValue(), displayedElevator.doorStatus.getText().trim());
         assertEquals(CommittedDirection.UNCOMMITTED.getPrintValue(), displayedElevator.elevatorDirection.getText().trim());
-        GridPane elevatorGrid =  ((GridPane)displayedElevator.gridContainer.getChildren().get(0));
+
+        // Check elevator/floors representation
+        GridPane elevatorGrid =  (GridPane)displayedElevator.gridContainer.getChildren().get(0);
         // 20 cells and -1 for the Group that is the gridpane per default
         assertEquals(20, elevatorGrid.getChildren().size()-1);
         // Check if elevator image is at the right position
         StackPane elevatorImgContainer = (StackPane) getNodeFromGridPane(elevatorGrid, 1, 9);
         assertNotNull(elevatorImgContainer.getChildren());
         assertTrue(elevatorImgContainer.getChildren().get(0) instanceof ImageView);
+        // Check if floor buttons are displayed accordingly
+        Text floorText = (Text) getNodeFromGridPane(elevatorGrid, 0, 0);
+        assertEquals("10   ▲", floorText.getText());
 
-        //TODO: check buttons
+        // Check elevator buttons
+        GridPane elevatorBtns = (GridPane) displayedElevator.elevatorBtnsContainer.getChildren().get(0);
+        assertEquals(11, elevatorBtns.getChildren().size());
+        StackPane floor10 = (StackPane) getNodeFromGridPane(elevatorBtns, 0, 0);
+        StackPane floor9 = (StackPane) getNodeFromGridPane(elevatorBtns, 0, 1);
+        assertTrue(floor10.getStyle().isEmpty());
+        assertEquals("-fx-background-color: " + ElevatorController.PRESSED_BACKGROUND, floor9.getStyle());
+
     }
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
