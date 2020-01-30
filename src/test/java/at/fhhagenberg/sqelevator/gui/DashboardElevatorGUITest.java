@@ -26,9 +26,12 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import sqelevator.IElevator;
 
+import java.rmi.RemoteException;
 import java.util.concurrent.Semaphore;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class DashboardElevatorGUITest extends ApplicationTest {
     private DashboardController controller;
@@ -56,8 +59,8 @@ public class DashboardElevatorGUITest extends ApplicationTest {
 
     @BeforeEach
     public void setUp () throws Exception {
-        rmiMock = new RMIInstanceMock();
-        management = new ElevatorManagement(rmiMock, false);
+        rmiMock = spy(new RMIInstanceMock());
+        management = spy(new ElevatorManagement(rmiMock, false));
         management.addListener(controller);
     }
 
@@ -66,9 +69,7 @@ public class DashboardElevatorGUITest extends ApplicationTest {
      * @throws InterruptedException
      */
     @Test
-    public void elevatorSystemDisplayElevatorTest() throws InterruptedException {
-        UIActionListener mockListener = Mockito.mock(UIActionListener.class);
-        controller.setUiListener(mockListener);
+    public void testElevatorSystemDisplayElevator() throws InterruptedException {
         management.pollElevatorSystem();
         waitForRunLater();
 
@@ -101,6 +102,52 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         assertTrue(floor10.getStyle().isEmpty());
         assertEquals("-fx-background-color: " + ElevatorController.PRESSED_BACKGROUND, floor9.getStyle());
 
+    }
+
+    @Test
+    public void testGUIInvalidInteractionManualMode() throws InterruptedException, RemoteException {
+        controller.setUiListener(management);
+        management.pollElevatorSystem();
+        waitForRunLater();
+
+        ElevatorController displayedElevator = controller.getElevators().get(0);
+
+        displayedElevator.manualInput.setText("0");
+        displayedElevator.sendRequest();
+        verify(management, never()).floorSelected(Mockito.anyInt(),Mockito.anyInt());
+        verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
+        verify(rmiMock, never()).setTarget(Mockito.anyInt(),Mockito.anyInt());
+        verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
+
+        displayedElevator.manualInput.setText("11");
+        displayedElevator.sendRequest();
+        verify(management, never()).floorSelected(Mockito.anyInt(),Mockito.anyInt());
+        verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
+        verify(rmiMock, never()).setTarget(Mockito.anyInt(),Mockito.anyInt());
+        verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
+    }
+
+    @Test
+    public void testGUIValidInteractionManualMode() throws InterruptedException, RemoteException {
+        controller.setUiListener(management);
+        management.pollElevatorSystem();
+        waitForRunLater();
+
+        ElevatorController displayedElevator = controller.getElevators().get(0);
+
+        displayedElevator.manualInput.setText("1");
+        displayedElevator.sendRequest();
+        verify(management, times(1)).floorSelected(0,0);
+        verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
+        verify(rmiMock, times(1)).setTarget(0, 0);
+        verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
+
+        displayedElevator.manualInput.setText("10");
+        displayedElevator.sendRequest();
+        verify(management, times(1)).floorSelected(0,9);
+        verify(management, times(1)).changeCommittedDirection(0, CommittedDirection.UP);
+        verify(rmiMock, times(1)).setTarget(0, 9);
+        verify(rmiMock, times(1)).setCommittedDirection(0, CommittedDirection.UP.getRawValue());
     }
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
