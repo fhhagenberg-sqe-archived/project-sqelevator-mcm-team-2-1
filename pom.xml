@@ -136,7 +136,7 @@
         <version>0.0.3</version>
         <configuration>
           <launcher>launcher</launcher>
-          <mainClass>at.fhhagenberg.sqelevator.ElevatorApplication</mainClass>
+          <mainClass>at.fhhagenberg.sqelevator.launcher.ElevatorApplication</mainClass>
         </configuration>
       </plugin>
     </plugins>

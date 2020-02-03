@@ -1,8 +1,6 @@
 package at.fhhagenberg.sqelevator.gui;
 
-import at.fhhagenberg.sqelevator.ElevatorApplication;
-import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
-import at.fhhagenberg.sqelevator.mocks.RMIInstanceMock;
+import at.fhhagenberg.sqelevator.launcher.ElevatorApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

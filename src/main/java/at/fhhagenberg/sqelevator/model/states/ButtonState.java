@@ -1,5 +1,10 @@
 package at.fhhagenberg.sqelevator.model.states;
 
+/**
+ * This enum is used to represent the buttons pressed at a floor (up, down, both, unset)
+ *
+ * @author Martin Schneglberger
+ */
 public enum ButtonState {
     UNSET("-"),
     UP("▲"),

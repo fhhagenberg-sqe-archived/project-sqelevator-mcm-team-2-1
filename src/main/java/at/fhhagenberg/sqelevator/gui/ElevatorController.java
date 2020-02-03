@@ -1,10 +1,12 @@
 package at.fhhagenberg.sqelevator.gui;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
+import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
 import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
+import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+/**
+ * Acts as an JavaFX controller for a single elevator. Beside displaying certain information like the speed in a textual
+ * representation, it also models the building by creating a grid where each row is a floor and shows the pressed buttons
+ * of each floor beside the current elevator position.
+ * A second grid is used to show which floors where requested inside the elevator
+ *
+ * @see DashboardController
+ *
+ * @author Martin Schneglberger
+ */
 public class ElevatorController implements Initializable, ElevatorChangeListener {
 
     public static final int GRID_SIZE = 30;
@@ -49,6 +61,11 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
     @Getter
     private Elevator elevator;
 
+    /**
+     * Sets the object which should be used to notify about any actions triggered by the UI
+     *
+     * @param uiActionListener The object which should be used to notify about any actions triggered by the UI
+     */
     public void setUiActionListener(UIActionListener uiActionListener) {
         this.uiActionListener = uiActionListener;
     }
@@ -58,6 +75,10 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         loadImage(); //TODO: Move to some singleton
     }
 
+    /**
+     * Gets called when the user wants to send the elevator to a certain floor manually.
+     * Does a quick sanity check of the input before forwarding it to the attached UIActionListener
+     */
     @FXML
     public void sendRequest() {
         String text = manualInput.getText();
@@ -76,7 +97,6 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
 
     @Override
     public void update(ElevatorSystem system, int elevatorId) {
-        //TODO: better threading!
         Platform.runLater(() -> {
             if(system!=null && system.getElevators().get(elevatorId)!=null) {
                 this.elevator = system.getElevators().get(elevatorId);
@@ -87,15 +107,18 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
                 acceleration.setText("Max: " + elevator.getAcceleration() + "ft/s²");
                 weight.setText(elevator.getWeight() + " kg");
                 doorStatus.setText(elevator.getDoorStatus().getPrintValue());
-                updateElevatorGrid(system); // TODO: Only redraw things that change
+                updateElevatorGrid(system);
                 updateElevatorBtnsGrid();
             }
         });
     }
 
+    /**
+     * Updates the grid representing the current elevator status (position and floor requests)
+     */
     private void updateElevatorGrid(ElevatorSystem elevatorSystem) {
         GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true); //TODO: Use css instead, as this is reserved for debugging purposes
+        gridPane.setGridLinesVisible(true);
 
         int currentFloor = elevator.getFloor();
 
@@ -123,9 +146,12 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         gridContainer.getChildren().add(gridPane);
     }
 
+    /**
+     * Updates the grid representing the requested floors in the elevator
+     */
     private void updateElevatorBtnsGrid() {
         GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true); //TODO: Use css instead, as this is reserved for debugging purposes
+        gridPane.setGridLinesVisible(true);
 
         HashMap<Integer, Boolean> buttons = elevator.getButtons();
         for(int i = buttons.size()-1; i >= 0; i--) {
@@ -146,6 +172,9 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         elevatorBtnsContainer.getChildren().add(gridPane);
     }
 
+    /**
+     * Loads the image representation of the elevator used to describe its current position
+     */
     private void loadImage() {
         try {
             Image image = new Image((getClass().getClassLoader().getResource("icons8-elevator-64.png").openStream()));

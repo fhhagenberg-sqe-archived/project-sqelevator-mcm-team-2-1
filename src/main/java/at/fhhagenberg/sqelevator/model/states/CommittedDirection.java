@@ -1,5 +1,10 @@
 package at.fhhagenberg.sqelevator.model.states;
 
+/**
+ * This enum represents the direction an elevator is committed to
+ *
+ * @author Martin Schneglberger
+ */
 public enum CommittedDirection {
     UP("Up", 0),
     DOWN("Down", 1),

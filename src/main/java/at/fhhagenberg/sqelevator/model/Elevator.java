@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 
+/**
+ * This class represents a single elevator
+ *
+ * @author Martin Schneglberger
+ */
 @Data
 @Builder
 @NoArgsConstructor

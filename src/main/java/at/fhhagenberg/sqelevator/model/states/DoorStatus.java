@@ -1,5 +1,10 @@
 package at.fhhagenberg.sqelevator.model.states;
 
+/**
+ * This enum represents the state in which an elevator's door is
+ *
+ * @author Martin Schneglberger
+ */
 public enum DoorStatus {
     OPEN("Open", 1),
     CLOSED("Closed", 2),

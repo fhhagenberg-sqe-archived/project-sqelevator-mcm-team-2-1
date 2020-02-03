@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 
+/**
+ * This class represents the current state of the overall elevator system
+ *
+ * @author Martin Schneglberger
+ */
 @Data
 @NoArgsConstructor
 public class ElevatorSystem {

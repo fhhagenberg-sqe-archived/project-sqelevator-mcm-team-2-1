@@ -1,4 +1,4 @@
-package at.fhhagenberg.sqelevator;
+package at.fhhagenberg.sqelevator.launcher;
 
 import at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher;
 import at.fhhagenberg.sqelevator.gui.DashboardController;
@@ -16,7 +16,12 @@ import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-
+/**
+ * This class contains the logic for booting the JavaFX ElevatorManagement GUI.
+ * Either link this class in the JavaFX config section of the pom, or directly run the main method of this class
+ *
+ * @author Martin Schneglberger
+ */
 public class ElevatorApplication extends Application {
 
     private static Logger logger = LoggerFactory.getLogger(ElevatorApplication.class);

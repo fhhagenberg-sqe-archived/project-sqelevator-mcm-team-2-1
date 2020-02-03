@@ -8,7 +8,6 @@ import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
 import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
 
@@ -20,6 +19,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class contains the management functionality of the elevator program.
+ * It can be constructed to poll the RMI interface on a regular basis
+ * By acting as a UIActionListener, it can also listen for UI events and forward requests to the RMI Server
+ *
+ * @see UIActionListener
+ * @author Martin Schneglberger
+ */
 public class ElevatorManagement implements UIActionListener {
 
     public static final String RMI_ERROR = "Error invoking RMI method";
@@ -34,12 +41,23 @@ public class ElevatorManagement implements UIActionListener {
 
     private LinkedList<ElevatorSystemChangeListener> listeners = new LinkedList<>();
 
+    /**
+     * Sets up the ElevatorManagement. Polling gets turned on automatically
+     *
+     * @param rmiInstance RMI instance
+     */
     public ElevatorManagement(IElevator rmiInstance) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
         initPolling();
     }
 
+    /**
+     * Additional constructor which allows to enable or disable the automatic polling
+     *
+     * @param rmiInstance RMI instance
+     * @param polling true if the RMI server should be polled on a regular basis
+     */
     public ElevatorManagement(IElevator rmiInstance, boolean polling) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
@@ -57,6 +75,9 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Requests latest updates from the RMI Server and saves them in the {@link #elevatorSystem} member
+     */
     public void pollElevatorSystem() {
         try {
             elevatorSystem.setElevatorCount(rmiInstance.getElevatorNum());
@@ -73,6 +94,11 @@ public class ElevatorManagement implements UIActionListener {
 
     }
 
+    /**
+     * Loads the states of the UP/Down buttons of each floor
+     *
+     * @throws RemoteException Gets thrown if no connection to the RMI server is possible
+     */
     private void getFloorButtonStates() throws RemoteException {
         elevatorSystem.setFloorButtons(new HashMap<>());
         for (int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
@@ -89,6 +115,11 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Loads the states of all elevators
+     *
+     * @throws RemoteException Gets thrown if no connection to the RMI server is possible
+     */
     private void pollElevators() throws RemoteException {
         elevatorSystem.setElevators(new HashMap<>());
         for(int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
@@ -98,6 +129,14 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Loads the status of a single elevator
+     *
+     * @param i Index of the elevator in question
+     * @return Elevator in current state
+     *
+     * @throws RemoteException Gets thrown if no connection to the RMI server is possible
+     */
     private Elevator pollElevator(int i) throws RemoteException {
         Elevator tempElevator = new Elevator();
         tempElevator.setId(i);
@@ -113,6 +152,11 @@ public class ElevatorManagement implements UIActionListener {
         return tempElevator;
     }
 
+    /**
+     * Loads the state of the buttons of a certain elevator (requested floors)
+     *
+     * @throws RemoteException Gets thrown if no connection to the RMI server is possible
+     */
     private void pollButtonsForElevator(Elevator elevator) throws RemoteException {
         elevator.setButtons(new HashMap<>());
         for(int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
@@ -120,6 +164,11 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Adds a listener which should get notified when new system updates got polled
+     *
+     * @param listener Object which should get informed about new updates
+     */
     public void addListener(ElevatorSystemChangeListener listener) {
         listeners.add(listener);
     }
@@ -142,10 +191,5 @@ public class ElevatorManagement implements UIActionListener {
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error(RMI_ERROR, e);
         }
-    }
-
-    @Override
-    public void setServicedFloor(int elevator, int floor, boolean serviced) {
-        //TODO: Christoph, implement this
     }
 }
