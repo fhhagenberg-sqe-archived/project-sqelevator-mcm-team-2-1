@@ -22,4 +22,5 @@ public interface UIActionListener {
      * @param direction new direction
      */
     void changeCommittedDirection(int elevator, CommittedDirection direction);
+    void setAutoMode(int elevator, boolean autoEnabled);
 }

@@ -7,6 +7,7 @@ import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
+import javafx.scene.control.Button;
 import lombok.Getter;
 import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
@@ -39,6 +40,8 @@ public class ElevatorManagement implements UIActionListener {
     @Getter
     private ElevatorSystem elevatorSystem;
 
+    private Boolean autoActive;
+
     private LinkedList<ElevatorSystemChangeListener> listeners = new LinkedList<>();
 
     /**
@@ -49,6 +52,7 @@ public class ElevatorManagement implements UIActionListener {
     public ElevatorManagement(IElevator rmiInstance) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
+        this.autoActive = false;
         initPolling();
     }
 
@@ -61,6 +65,7 @@ public class ElevatorManagement implements UIActionListener {
     public ElevatorManagement(IElevator rmiInstance, boolean polling) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
+        this.autoActive = false;
         if(polling) initPolling();
     }
 
@@ -88,13 +93,114 @@ public class ElevatorManagement implements UIActionListener {
             pollElevators();
 
             listeners.forEach(listener -> listener.update(elevatorSystem));
+
+            setNextAutoModeActions();
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error("RMI could not be polled", e);
         }
 
     }
 
-    /**
+    private void setNextAutoModeActions() throws RemoteException {
+        //if(automode) --> how do we get this?
+        for(int ele = 0; ele < rmiInstance.getElevatorNum();  ele++) {
+            Elevator actElevator = elevatorSystem.getElevators().get(ele);
+
+
+            //if(actElevator.isAutomaticModeActive()) {
+            //if(elevatorSystem.getElevators().get(ele).isAutomaticModeActive()){
+            if(autoActive){
+                /*for (int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
+                    //test floor for up or down already done before in getFloorButton States
+                    boolean isUp = rmiInstance.getFloorButtonUp(floor);
+                    boolean isDown = rmiInstance.getFloorButtonDown(floor);
+
+                        //rmiInstance.
+                        ButtonState stateFloor = elevatorSystem.getFloorButtons().get(floor);
+                        rmiInstance.get;
+                        elevatorSystem.getElevators().get(0).;
+                }
+                elevatorSystem.getElevators()
+                elevatorSystem.getFloorButtons().
+                */
+                int actualFloor = actElevator.getFloor();
+                CommittedDirection actualDirection = actElevator.getCommittedDirection();
+
+                if(actualDirection==CommittedDirection.UNCOMMITTED){
+                    actualDirection = CommittedDirection.UP;
+                }
+                if(actElevator.getFloor() <= 0){
+                    actualDirection = CommittedDirection.UP;
+                }else if(actElevator.getFloor() >= elevatorSystem.getFloorCount()-1){
+                    actualDirection = CommittedDirection.DOWN;
+                }
+
+
+                //find next floor
+                int nextFloor = getNextFloor(actElevator, elevatorSystem, actualFloor, actualDirection);
+                if(nextFloor == Integer.MAX_VALUE){
+                    if(actualDirection == CommittedDirection.UP){
+                        actualDirection = CommittedDirection.DOWN;
+                    }else {
+                        actualDirection = CommittedDirection.UP;
+                    }
+                    nextFloor = getNextFloor(actElevator, elevatorSystem, actualFloor, actualDirection);
+                }
+
+                //send the elevator to it's selected floor
+                if (nextFloor != Integer.MAX_VALUE && nextFloor >= 0){
+                    //actElevator.setCommittedDirection(actualDirection);
+                    changeCommittedDirection(actElevator.getId(), actualDirection);
+                    //actElevator.setFloor(nextFloor);
+                    floorSelected(actElevator.getId(), nextFloor);
+                    System.out.println("Set next floor to " + nextFloor + "; Direction: " + actualDirection.getPrintValue());
+                }else {
+                    actElevator.setCommittedDirection(CommittedDirection.UNCOMMITTED);
+                    System.out.println("Set Direction to: " + actualDirection.getPrintValue() + "; nextFloor: " + nextFloor);
+                }
+            }
+        }
+
+    }
+
+    private int getNextFloor(Elevator actElevator, ElevatorSystem elevatorSystem,
+                             int actualFloor, CommittedDirection direction){
+        int nextFloor = Integer.MAX_VALUE;
+
+        /*
+        get next choosen and next wishing to go into the same direction - set this one as new goal
+                    (or if full capacity:weight just the next choosen)
+        */
+        int endFloor = -1;
+        int plusMinus = -1;
+        if(direction == CommittedDirection.UP){
+            endFloor = elevatorSystem.getFloorCount();
+            plusMinus = 1;
+        }
+
+        while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor){
+            //if not full --> get the next floor in the direction, where someone wants to go the same direction
+            //if(actElevator.getWeight() >= (actElevator.getCapacity()*0.9)){
+                ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
+                if(     (bs == ButtonState.BOTH)
+                        || ((bs==ButtonState.DOWN)&&(direction==CommittedDirection.DOWN))
+                        || ((bs==ButtonState.UP)&&(direction==CommittedDirection.UP))){
+                    nextFloor = actualFloor;
+                }
+            //}
+
+            //if not already set and the button for this floor is pressed in the elevator --> set next floor to it
+            if((nextFloor == Integer.MAX_VALUE) && actElevator.getButtons().get(actualFloor)){
+                nextFloor = actualFloor;
+            }
+
+            actualFloor += plusMinus;
+        }
+
+        return nextFloor;
+    }
+
+	/**
      * Loads the states of the UP/Down buttons of each floor
      *
      * @throws RemoteException Gets thrown if no connection to the RMI server is possible
@@ -191,5 +297,11 @@ public class ElevatorManagement implements UIActionListener {
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error(RMI_ERROR, e);
         }
+    }
+
+    @Override
+    public void setAutoMode(int elevator, boolean autoEnabled) {
+        autoActive = autoEnabled;
+        elevatorSystem.getElevators().get(elevator).setAutomaticModeActive(autoEnabled);
     }
 }

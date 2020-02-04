@@ -29,5 +29,6 @@ public class Elevator {
     private int acceleration;
     private int capacity;
     private int weight;
+    private boolean automaticModeActive;
     private HashMap<Integer, Boolean> buttons = new HashMap<>();
 }
