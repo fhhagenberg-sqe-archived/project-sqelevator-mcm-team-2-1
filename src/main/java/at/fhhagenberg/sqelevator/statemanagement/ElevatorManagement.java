@@ -178,6 +178,8 @@ public class ElevatorManagement implements UIActionListener {
             plusMinus = 1;
         }
 
+        actualFloor += plusMinus;
+
         while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor){
             //if not full --> get the next floor in the direction, where someone wants to go the same direction
             //if(actElevator.getWeight() >= (actElevator.getCapacity()*0.9)){
