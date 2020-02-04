@@ -8,7 +8,9 @@ import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -39,6 +41,8 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
 
     @FXML public Pane gridContainer;
     @FXML public Pane elevatorBtnsContainer;
+    @FXML public ToggleButton enableAuto;
+    @FXML public Button manualSend;
 
     private ImageView elevatorImage = null;
 
@@ -58,21 +62,49 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         loadImage(); //TODO: Move to some singleton
     }
 
+    public void changeAutoMode(){
+
+        Boolean autoOn = enableAuto.isSelected();
+        manualInput.setDisable(autoOn);
+        manualSend.setDisable(autoOn);
+
+        elevator.setAutomaticModeActive(autoOn);
+        uiActionListener.setAutoMode(elevator.getId(), autoOn);
+
+        System.out.println("Automatic mode: " + autoOn.toString());
+        /*
+        if(enableAuto.isSelected()){
+            manualInput.setDisable(true);
+            manualSend.setDisable(true);
+        }else{
+            manualInput.setDisable(false);
+            manualSend.setDisable(false);
+        }
+        elevator.setAutomaticModeActive(enableAuto.isSelected());
+
+         */
+    }
+
     @FXML
     public void sendRequest() {
-        String text = manualInput.getText();
-        // text must be a positive integer and not be empty
-        if(!text.isEmpty() && text.matches("^[1-9]\\d*$") && uiActionListener!=null) {
-            Integer selectedFloor = Integer.parseInt(text)-1;
-            if(selectedFloor<maxFloor) {
-                uiActionListener.floorSelected(elevator.getId(), selectedFloor);
-                if(selectedFloor<elevator.getFloor())
-                    uiActionListener.changeCommittedDirection(elevator.getId(), CommittedDirection.DOWN);
-                else if(selectedFloor>elevator.getFloor())
-                    uiActionListener.changeCommittedDirection(elevator.getId(), CommittedDirection.UP);
+
+        //if(!enableAuto.isSelected()) {
+        if(!elevator.isAutomaticModeActive()){
+            String text = manualInput.getText();
+            // text must be a positive integer and not be empty
+            if (!text.isEmpty() && text.matches("^[1-9]\\d*$") && uiActionListener != null) {
+                Integer selectedFloor = Integer.parseInt(text) - 1;
+                if (selectedFloor < maxFloor) {
+                    uiActionListener.floorSelected(elevator.getId(), selectedFloor);
+                    if (selectedFloor < elevator.getFloor())
+                        uiActionListener.changeCommittedDirection(elevator.getId(), CommittedDirection.DOWN);
+                    else if (selectedFloor > elevator.getFloor())
+                        uiActionListener.changeCommittedDirection(elevator.getId(), CommittedDirection.UP);
+                }
             }
         }
     }
+
 
     @Override
     public void update(ElevatorSystem system, int elevatorId) {
