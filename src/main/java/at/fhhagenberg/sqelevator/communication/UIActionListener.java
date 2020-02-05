@@ -5,7 +5,7 @@ import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 /**
  * This interface is used to notify about any actions that can be triggered by the UI
  *
- * @author Martin Schneglberger
+ * @author Martin Schneglberger, Christoph Obermayr
  */
 public interface UIActionListener {
     /**
@@ -22,5 +22,11 @@ public interface UIActionListener {
      * @param direction new direction
      */
     void changeCommittedDirection(int elevator, CommittedDirection direction);
+
+    /**
+     * Set or clear the auto-mode for the chosen elevator
+     * @param elevator
+     * @param autoEnabled
+     */
     void setAutoMode(int elevator, boolean autoEnabled);
 }

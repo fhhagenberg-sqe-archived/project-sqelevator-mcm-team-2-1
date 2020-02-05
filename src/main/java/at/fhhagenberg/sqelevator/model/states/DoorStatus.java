@@ -13,11 +13,21 @@ public enum DoorStatus {
     private String printValue;
     private int rawValue;
 
+    /**
+     * Constructor
+     * @param text
+     * @param rawValue
+     */
     DoorStatus(String text, int rawValue) {
         printValue = text;
         this.rawValue = rawValue;
     }
 
+    /**
+     * Get a door status from an integer value
+     * @param x
+     * @return
+     */
     public static DoorStatus fromInteger(int x) {
         switch(x) {
             case 1:
@@ -29,10 +39,18 @@ public enum DoorStatus {
         }
     }
 
+    /**
+     * Get the status as string
+     * @return
+     */
     public String getPrintValue() {
         return printValue;
     }
 
+    /**
+     * Get the status as integer
+     * @return
+     */
     public int getRawValue() {
         return rawValue;
     }

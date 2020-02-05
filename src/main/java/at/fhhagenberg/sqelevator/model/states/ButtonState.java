@@ -13,10 +13,18 @@ public enum ButtonState {
 
     private String printValue;
 
+    /**
+     * Constructor
+     * @param stringValue
+     */
     ButtonState(String stringValue) {
         this.printValue = stringValue;
     }
 
+    /**
+     * get the Text value
+     * @return
+     */
     public String getPrintValue() {
         return printValue;
     }

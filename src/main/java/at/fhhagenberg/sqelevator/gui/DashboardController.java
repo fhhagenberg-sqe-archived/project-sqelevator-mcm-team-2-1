@@ -27,7 +27,7 @@ import java.util.HashMap;
  * @see ElevatorManagement#addListener(ElevatorSystemChangeListener)
  * @see ElevatorController
  *
- * @author Martin Schneglberger
+ * @author Martin Schneglberger, Christoph Obermayr
  */
 public class DashboardController implements ElevatorSystemChangeListener {
     @FXML
@@ -39,6 +39,10 @@ public class DashboardController implements ElevatorSystemChangeListener {
     @Setter
     private UIActionListener uiListener;
 
+    /**
+     * Update the dashboard
+     * @param system new elevator system representation
+     */
     @Override
     public void update(ElevatorSystem system) {
         if (!initialized) {
@@ -70,5 +74,17 @@ public class DashboardController implements ElevatorSystemChangeListener {
             LoggerFactory.getLogger(DashboardController.class).error("Error creating controllers", exception);
         }
 
+    }
+
+    /**
+     * Terminates the program - necessary for a clean exit
+     */
+    public void shutdown() {
+        // cleanup code here...
+        System.out.println("Program stopped");
+        // note that typically (i.e. if Platform.isImplicitExit() is true, which is the default)
+        // closing the last open window will invoke Platform.exit() anyway
+        Platform.exit();
+        System.exit(0);
     }
 }

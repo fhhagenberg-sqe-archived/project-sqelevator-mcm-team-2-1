@@ -12,11 +12,21 @@ public enum CommittedDirection {
     private String printValue;
     private Integer rawValue;
 
+    /**
+     * Constructor
+     * @param text
+     * @param rawValue
+     */
     CommittedDirection(String text, Integer rawValue) {
         printValue = text;
         this.rawValue = rawValue;
     }
 
+    /**
+     * Get a direction from an integer value
+     * @param x
+     * @return
+     */
     public static CommittedDirection fromInteger(int x) {
         switch(x) {
             case 0:
@@ -28,10 +38,18 @@ public enum CommittedDirection {
         }
     }
 
+    /**
+     * Get the String value
+     * @return
+     */
     public String getPrintValue() {
         return printValue;
     }
 
+    /**
+     * Get the direction as Integer
+     * @return
+     */
     public Integer getRawValue() {
         return rawValue;
     }

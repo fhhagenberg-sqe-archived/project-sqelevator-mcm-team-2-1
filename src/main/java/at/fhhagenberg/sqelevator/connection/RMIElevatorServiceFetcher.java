@@ -16,6 +16,9 @@ public class RMIElevatorServiceFetcher {
 
     private static IElevator rmiInstance;
 
+    /**
+     * Default constructor
+     */
     private RMIElevatorServiceFetcher() { }
 
     /**

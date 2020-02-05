@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  *
  * @see DashboardController
  *
- * @author Martin Schneglberger
+ * @author Martin Schneglberger, Christoph Obermayr
  */
 public class ElevatorController implements Initializable, ElevatorChangeListener {
 
@@ -74,12 +74,19 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         this.uiActionListener = uiActionListener;
     }
 
+    /**
+     * Initialization of the elevator system
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImage(); //TODO: Move to some singleton
     }
 
-	
+    /**
+     * Set or clear auto mode for this elevator based on the button state
+     */
     public void changeAutoMode(){
 
         Boolean autoOn = enableAuto.isSelected();
@@ -90,17 +97,6 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         uiActionListener.setAutoMode(elevator.getId(), autoOn);
 
         System.out.println("Automatic mode: " + autoOn.toString());
-        /*
-        if(enableAuto.isSelected()){
-            manualInput.setDisable(true);
-            manualSend.setDisable(true);
-        }else{
-            manualInput.setDisable(false);
-            manualSend.setDisable(false);
-        }
-        elevator.setAutomaticModeActive(enableAuto.isSelected());
-
-         */
     }
 	
 	/**
@@ -128,6 +124,11 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
     }
 
 
+    /**
+     * Update the GUI
+     * @param system
+     * @param elevatorId elevator in question
+     */
     @Override
     public void update(ElevatorSystem system, int elevatorId) {
         Platform.runLater(() -> {

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * By acting as a UIActionListener, it can also listen for UI events and forward requests to the RMI Server
  *
  * @see UIActionListener
- * @author Martin Schneglberger
+ * @author Martin Schneglberger, Christoph Obermayr
  */
 public class ElevatorManagement implements UIActionListener {
 
@@ -101,28 +101,16 @@ public class ElevatorManagement implements UIActionListener {
 
     }
 
+    /**
+     * Set the next actions (direction and floor) for every elevator in the system which works in auto-mode
+     * @throws RemoteException
+     */
     private void setNextAutoModeActions() throws RemoteException {
-        //if(automode) --> how do we get this?
         for(int ele = 0; ele < rmiInstance.getElevatorNum();  ele++) {
             Elevator actElevator = elevatorSystem.getElevators().get(ele);
 
-
-            //if(actElevator.isAutomaticModeActive()) {
-            //if(elevatorSystem.getElevators().get(ele).isAutomaticModeActive()){
             if(autoActive){
-                /*for (int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
-                    //test floor for up or down already done before in getFloorButton States
-                    boolean isUp = rmiInstance.getFloorButtonUp(floor);
-                    boolean isDown = rmiInstance.getFloorButtonDown(floor);
 
-                        //rmiInstance.
-                        ButtonState stateFloor = elevatorSystem.getFloorButtons().get(floor);
-                        rmiInstance.get;
-                        elevatorSystem.getElevators().get(0).;
-                }
-                elevatorSystem.getElevators()
-                elevatorSystem.getFloorButtons().
-                */
                 int actualFloor = actElevator.getFloor();
                 CommittedDirection actualDirection = actElevator.getCommittedDirection();
 
@@ -141,17 +129,17 @@ public class ElevatorManagement implements UIActionListener {
                 if(nextFloor == Integer.MAX_VALUE){
                     if(actualDirection == CommittedDirection.UP){
                         actualDirection = CommittedDirection.DOWN;
+                        //actualFloor = elevatorSystem.getFloorCount();
                     }else {
                         actualDirection = CommittedDirection.UP;
+                        //actualFloor = 0;
                     }
                     nextFloor = getNextFloor(actElevator, elevatorSystem, actualFloor, actualDirection);
                 }
 
                 //send the elevator to it's selected floor
                 if (nextFloor != Integer.MAX_VALUE && nextFloor >= 0){
-                    //actElevator.setCommittedDirection(actualDirection);
                     changeCommittedDirection(actElevator.getId(), actualDirection);
-                    //actElevator.setFloor(nextFloor);
                     floorSelected(actElevator.getId(), nextFloor);
                     System.out.println("Set next floor to " + nextFloor + "; Direction: " + actualDirection.getPrintValue());
                 }else {
@@ -163,6 +151,14 @@ public class ElevatorManagement implements UIActionListener {
 
     }
 
+    /**
+     * Calculates the next floor to go to based on the pressed buttons and the actual load
+     * @param actElevator
+     * @param elevatorSystem
+     * @param actualFloor
+     * @param direction
+     * @return
+     */
     private int getNextFloor(Elevator actElevator, ElevatorSystem elevatorSystem,
                              int actualFloor, CommittedDirection direction){
         int nextFloor = Integer.MAX_VALUE;
@@ -182,7 +178,7 @@ public class ElevatorManagement implements UIActionListener {
 
         while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor){
             //if not full --> get the next floor in the direction, where someone wants to go the same direction
-            //if(actElevator.getWeight() >= (actElevator.getCapacity()*0.9)){
+            //if(actElevator.getWeight() < (actElevator.getCapacity()*80)){
                 ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
                 if(     (bs == ButtonState.BOTH)
                         || ((bs==ButtonState.DOWN)&&(direction==CommittedDirection.DOWN))
@@ -281,6 +277,11 @@ public class ElevatorManagement implements UIActionListener {
         listeners.add(listener);
     }
 
+    /**
+     * Communicate the selected floor over the RMI interface to the elevator
+     * @param elevator elevator in question
+     * @param floor target floor
+     */
     @Override
     public void floorSelected(int elevator, int floor) {
         try {
@@ -290,10 +291,13 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Communicate the selected direction over the RMI interface to the elevator
+     * @param elevator elevator in question
+     * @param direction new direction
+     */
     @Override
     public void changeCommittedDirection(int elevator, CommittedDirection direction) {
-        //TODO: Christoph, change the logic for this based on the automatic mode
-        //Is hardcoded now for the manual mode
         try {
             this.rmiInstance.setCommittedDirection(elevator, direction.getRawValue());
         } catch (RemoteException e) {
@@ -301,6 +305,11 @@ public class ElevatorManagement implements UIActionListener {
         }
     }
 
+    /**
+     * Set or clear the auto-mode for the chosen elevator
+     * @param elevator
+     * @param autoEnabled
+     */
     @Override
     public void setAutoMode(int elevator, boolean autoEnabled) {
         autoActive = autoEnabled;
