@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
  * It can be constructed to poll the RMI interface on a regular basis
  * By acting as a UIActionListener, it can also listen for UI events and forward requests to the RMI Server
  *
- * @see UIActionListener
  * @author Martin Schneglberger, Christoph Obermayr
+ * @see UIActionListener
  */
 public class ElevatorManagement implements UIActionListener {
 
@@ -62,19 +62,19 @@ public class ElevatorManagement implements UIActionListener {
      * Additional constructor which allows to enable or disable the automatic polling
      *
      * @param rmiInstance RMI instance
-     * @param polling true if the RMI server should be polled on a regular basis
+     * @param polling     true if the RMI server should be polled on a regular basis
      */
     public ElevatorManagement(IElevator rmiInstance, boolean polling) {
         this.rmiInstance = rmiInstance;
         this.elevatorSystem = new ElevatorSystem();
         this.autoActive = false;
-        if(polling) initPolling();
+        if (polling) initPolling();
     }
 
     private void initPolling() {
         try {
             long period = this.rmiInstance.getClockTick();
-            if(period == 0) period = 100;
+            if (period == 0) period = 100;
             this.elevatorSystem.setClockTickRate(period);
             future = scheduler.scheduleAtFixedRate(this::pollElevatorSystem, 1, period, TimeUnit.MILLISECONDS);
         } catch (RemoteException e) {
@@ -96,14 +96,16 @@ public class ElevatorManagement implements UIActionListener {
 
             listeners.forEach(listener -> listener.update(elevatorSystem));
 
-            autoMode.setNextAutoModeActions();
+            if (autoActive) {
+                autoMode.setNextAutoModeActions();
+            }
         } catch (RemoteException e) {
             LoggerFactory.getLogger(ElevatorManagement.class).error("RMI could not be polled", e);
         }
 
     }
 
-	/**
+    /**
      * Loads the states of the UP/Down buttons of each floor
      *
      * @throws RemoteException Gets thrown if no connection to the RMI server is possible
@@ -115,7 +117,7 @@ public class ElevatorManagement implements UIActionListener {
             boolean isDown = rmiInstance.getFloorButtonDown(floor);
             ButtonState state;
 
-            if(isUp && isDown) state = ButtonState.BOTH;
+            if (isUp && isDown) state = ButtonState.BOTH;
             else if (isUp) state = ButtonState.UP;
             else if (isDown) state = ButtonState.DOWN;
             else state = ButtonState.UNSET;
@@ -131,7 +133,7 @@ public class ElevatorManagement implements UIActionListener {
      */
     private void pollElevators() throws RemoteException {
         elevatorSystem.setElevators(new HashMap<>());
-        for(int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
+        for (int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
             Elevator tempElevator = pollElevator(i);
             pollButtonsForElevator(tempElevator);
             elevatorSystem.getElevators().put(i, tempElevator);
@@ -143,7 +145,6 @@ public class ElevatorManagement implements UIActionListener {
      *
      * @param i Index of the elevator in question
      * @return Elevator in current state
-     *
      * @throws RemoteException Gets thrown if no connection to the RMI server is possible
      */
     private Elevator pollElevator(int i) throws RemoteException {
@@ -168,7 +169,7 @@ public class ElevatorManagement implements UIActionListener {
      */
     private void pollButtonsForElevator(Elevator elevator) throws RemoteException {
         elevator.setButtons(new HashMap<>());
-        for(int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
+        for (int floor = 0; floor < rmiInstance.getFloorNum(); floor++) {
             elevator.getButtons().put(floor, rmiInstance.getElevatorButton(elevator.getId(), floor));
         }
     }
@@ -184,8 +185,9 @@ public class ElevatorManagement implements UIActionListener {
 
     /**
      * Communicate the selected floor over the RMI interface to the elevator
+     *
      * @param elevator elevator in question
-     * @param floor target floor
+     * @param floor    target floor
      */
     @Override
     public void floorSelected(int elevator, int floor) {
@@ -198,7 +200,8 @@ public class ElevatorManagement implements UIActionListener {
 
     /**
      * Communicate the selected direction over the RMI interface to the elevator
-     * @param elevator elevator in question
+     *
+     * @param elevator  elevator in question
      * @param direction new direction
      */
     @Override
@@ -212,6 +215,7 @@ public class ElevatorManagement implements UIActionListener {
 
     /**
      * Set or clear the auto-mode for the chosen elevator
+     *
      * @param elevator
      * @param autoEnabled
      */
