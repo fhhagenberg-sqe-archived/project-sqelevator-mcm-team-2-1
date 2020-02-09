@@ -89,7 +89,7 @@ public class AutoMode {
      * @param direction         the direction the elevator is actually going to
      * @return                  next floor to go to
      */
-    private int getNextFloor(Elevator actElevator, ElevatorSystem elevatorSystem,
+    public int getNextFloor(Elevator actElevator, ElevatorSystem elevatorSystem,
                              int actualFloor, CommittedDirection direction) {
         int nextFloor = Integer.MAX_VALUE;
 
@@ -143,7 +143,7 @@ public class AutoMode {
                                    CommittedDirection direction, ElevatorSystem elevatorSystem, Elevator actElevator) {
         while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor) {
             //if not full --> get the next floor in the direction, where someone wants to go the same direction
-            if(actElevator.getCapacity()*80 < actElevator.getWeight()) {
+            if(actElevator.getCapacity()*80 > actElevator.getWeight()) {
                 ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
                 if ((bs == ButtonState.BOTH)
                         || ((bs == ButtonState.DOWN) && (direction == CommittedDirection.DOWN))

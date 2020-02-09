@@ -27,7 +27,7 @@ public class AutoModeTest {
     }
 
     @Test
-    public void testAutoMode() throws RemoteException {
+    public void testSetNextAutoModeActions() throws RemoteException {
         elevatorManagement.pollElevatorSystem();
         elevatorManagement.setAutoMode(0, true);
         ElevatorSystem result = elevatorManagement.getElevatorSystem();
@@ -70,5 +70,106 @@ public class AutoModeTest {
          */
         assertEquals(0, resultElevator.getTarget());
         assertEquals(CommittedDirection.UNCOMMITTED, resultElevator.getCommittedDirection());
+    }
+
+    @Test
+    public void testSearchNextFloorLoopUP() throws RemoteException {
+        elevatorManagement.pollElevatorSystem();
+        elevatorManagement.setAutoMode(0, true);
+        ElevatorSystem result = elevatorManagement.getElevatorSystem();
+        AutoMode autoMode = new AutoMode(elevatorManagement, mock);
+        int nextFloor = Integer.MAX_VALUE;
+
+        //UP
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 1, 10, 1, CommittedDirection.UP, result, result.getElevators().get(0));
+        assertEquals(1, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 2, 10, 1, CommittedDirection.UP, result, result.getElevators().get(0));
+        assertEquals(2, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 3, 10, 1, CommittedDirection.UP, result, result.getElevators().get(0));
+        assertEquals(3, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 9, 10, 1, CommittedDirection.UP, result, result.getElevators().get(0));
+        assertEquals(9, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 10, 10, 1, CommittedDirection.UP, result, result.getElevators().get(0));
+        assertEquals(Integer.MAX_VALUE, nextFloor);
+
+    }
+
+    @Test
+    public void testSearchNextFloorLoopDOWN() throws RemoteException {
+        elevatorManagement.pollElevatorSystem();
+        elevatorManagement.setAutoMode(0, true);
+        ElevatorSystem result = elevatorManagement.getElevatorSystem();
+        AutoMode autoMode = new AutoMode(elevatorManagement, mock);
+        int nextFloor = Integer.MAX_VALUE;
+
+        //DOWN
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 9, 0, -1, CommittedDirection.DOWN, result, result.getElevators().get(0));
+        assertEquals(8, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 8, 0, -1, CommittedDirection.DOWN, result, result.getElevators().get(0));
+        assertEquals(8, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 1, 0, -1, CommittedDirection.DOWN, result, result.getElevators().get(0));
+        assertEquals(Integer.MAX_VALUE, nextFloor);
+
+        nextFloor = autoMode.searchNextFloorLoop(Integer.MAX_VALUE, 0, 0, -1, CommittedDirection.DOWN, result, result.getElevators().get(0));
+        assertEquals(Integer.MAX_VALUE, nextFloor);
+    }
+
+    @Test
+    public void testGetNextFloorUP() throws RemoteException {
+        elevatorManagement.pollElevatorSystem();
+        elevatorManagement.setAutoMode(0, true);
+        ElevatorSystem result = elevatorManagement.getElevatorSystem();
+        AutoMode autoMode = new AutoMode(elevatorManagement, mock);
+        int nextFloor = Integer.MAX_VALUE;
+
+        //UP
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 0, CommittedDirection.UP);
+        assertEquals(1, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 1, CommittedDirection.UP);
+        assertEquals(2, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 2, CommittedDirection.UP);
+        assertEquals(3, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 8, CommittedDirection.UP);
+        assertEquals(9, nextFloor);
+
+        //now we have to turn around
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 9, CommittedDirection.UP);
+        assertEquals(8, nextFloor);
+
+    }
+
+    @Test
+    public void testGetNextFloorDOWN() throws RemoteException {
+        elevatorManagement.pollElevatorSystem();
+        elevatorManagement.setAutoMode(0, true);
+        ElevatorSystem result = elevatorManagement.getElevatorSystem();
+        AutoMode autoMode = new AutoMode(elevatorManagement, mock);
+        int nextFloor = Integer.MAX_VALUE;
+
+        //DOWN
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 10, CommittedDirection.DOWN);
+        assertEquals(8, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 9, CommittedDirection.DOWN);
+        assertEquals(8, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 2, CommittedDirection.DOWN);
+        assertEquals(0, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, 1, CommittedDirection.DOWN);
+        assertEquals(0, nextFloor);
+
+        nextFloor = autoMode.getNextFloor(result.getElevators().get(0), result, -1, CommittedDirection.DOWN);
+        assertEquals(8, nextFloor);
+
     }
 }
