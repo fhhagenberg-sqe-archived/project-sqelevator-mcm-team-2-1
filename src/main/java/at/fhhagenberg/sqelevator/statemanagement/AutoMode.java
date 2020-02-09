@@ -1,6 +1,5 @@
 package at.fhhagenberg.sqelevator.statemanagement;
 
-import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
@@ -40,7 +39,7 @@ public class AutoMode {
         for (int ele = 0; ele < rmiInstance.getElevatorNum(); ele++) {
             Elevator actElevator = management.getElevatorSystem().getElevators().get(ele);
 
-            if (management.getAutoActive()) {
+            if (Boolean.TRUE.equals(management.getAutoActive())) {
 
                 int actualFloor = actElevator.getFloor();
                 CommittedDirection actualDirection = actElevator.getCommittedDirection();
@@ -60,10 +59,10 @@ public class AutoMode {
                 if (nextFloor == Integer.MAX_VALUE) {
                     if (actualDirection == CommittedDirection.UP) {
                         actualDirection = CommittedDirection.DOWN;
-                        //actualFloor = elevatorSystem.getFloorCount();
+                        actualFloor = management.getElevatorSystem().getFloorCount();
                     } else {
                         actualDirection = CommittedDirection.UP;
-                        //actualFloor = 0;
+                        actualFloor = -1;
                     }
                     nextFloor = getNextFloor(actElevator, management.getElevatorSystem(), actualFloor, actualDirection);
                 }
@@ -72,11 +71,10 @@ public class AutoMode {
                 if (nextFloor != Integer.MAX_VALUE && nextFloor >= 0) {
                     management.changeCommittedDirection(actElevator.getId(), actualDirection);
                     management.floorSelected(actElevator.getId(), nextFloor);
-                    LoggerFactory.getLogger(AutoMode.class).info("Set next floor to " + nextFloor + "; Direction: " + actualDirection.getPrintValue());
                 } else {
                     actElevator.setCommittedDirection(CommittedDirection.UNCOMMITTED);
-                    LoggerFactory.getLogger(AutoMode.class).info("Set Direction to: " + actualDirection.getPrintValue() + "; nextFloor: " + nextFloor);
                 }
+                LoggerFactory.getLogger(AutoMode.class).info(String.format("Set next floor to %s; Direction: %s", nextFloor, actualDirection.getPrintValue()));
             }
         }
 
@@ -145,7 +143,6 @@ public class AutoMode {
                                    CommittedDirection direction, ElevatorSystem elevatorSystem, Elevator actElevator) {
         while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor) {
             //if not full --> get the next floor in the direction, where someone wants to go the same direction
-            //if(actElevator.getWeight() < (actElevator.getCapacity()*80)){
             if(actElevator.getCapacity()*80 < actElevator.getWeight()) {
                 ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
                 if ((bs == ButtonState.BOTH)
@@ -155,10 +152,9 @@ public class AutoMode {
                     nextFloor = actualFloor;
                 }
             }
-            //}
 
             //if not already set and the button for this floor is pressed in the elevator --> set next floor to it
-            if ((nextFloor == Integer.MAX_VALUE) && actElevator.getButtons().get(actualFloor)) {
+            if ((nextFloor == Integer.MAX_VALUE) && Boolean.TRUE.equals(actElevator.getButtons().get(actualFloor))) {
                 nextFloor = actualFloor;
             }
 

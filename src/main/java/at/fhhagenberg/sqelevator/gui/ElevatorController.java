@@ -1,12 +1,10 @@
 package at.fhhagenberg.sqelevator.gui;
 
 import at.fhhagenberg.sqelevator.communication.ElevatorChangeListener;
-import at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener;
 import at.fhhagenberg.sqelevator.communication.UIActionListener;
 import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
-import at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -96,7 +94,7 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         elevator.setAutomaticModeActive(autoOn);
         uiActionListener.setAutoMode(elevator.getId(), autoOn);
 
-        LoggerFactory.getLogger(ElevatorController.class).info("Automatic mode: " + autoOn.toString());
+        LoggerFactory.getLogger(ElevatorController.class).info(String.format("Automatic mode: %s", autoOn.toString()));
     }
 	
 	/**
@@ -106,7 +104,6 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
     @FXML
     public void sendRequest() {
 
-        //if(!enableAuto.isSelected()) {
         if(!elevator.isAutomaticModeActive()){
             String text = manualInput.getText();
             // text must be a positive integer and not be empty

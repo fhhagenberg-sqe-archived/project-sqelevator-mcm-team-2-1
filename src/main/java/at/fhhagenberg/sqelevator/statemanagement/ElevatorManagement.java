@@ -7,7 +7,6 @@ import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
 import at.fhhagenberg.sqelevator.model.states.DoorStatus;
-import javafx.scene.control.Button;
 import lombok.Getter;
 import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
@@ -96,7 +95,7 @@ public class ElevatorManagement implements UIActionListener {
 
             listeners.forEach(listener -> listener.update(elevatorSystem));
 
-            if (autoActive) {
+            if (Boolean.TRUE.equals(autoActive)) {
                 autoMode.setNextAutoModeActions();
             }
         } catch (RemoteException e) {
