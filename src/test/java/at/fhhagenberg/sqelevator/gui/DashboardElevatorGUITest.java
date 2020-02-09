@@ -16,12 +16,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import sqelevator.IElevator;
@@ -40,7 +42,7 @@ public class DashboardElevatorGUITest extends ApplicationTest {
     private ElevatorManagement management;
 
     @Override
-    public void start (Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dashboard.fxml"));
         Parent mainNode = fxmlLoader.load();
         controller = Mockito.spy(fxmlLoader.<DashboardController>getController());
@@ -51,14 +53,14 @@ public class DashboardElevatorGUITest extends ApplicationTest {
     }
 
     @AfterEach
-    public void tearDown () throws Exception {
+    public void tearDown() throws Exception {
         FxToolkit.hideStage();
         release(new KeyCode[]{});
         release(new MouseButton[]{});
     }
 
     @BeforeEach
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
         rmiMock = spy(new RMIInstanceMock());
         management = spy(new ElevatorManagement(rmiMock, false));
         management.addListener(controller);
@@ -66,6 +68,7 @@ public class DashboardElevatorGUITest extends ApplicationTest {
 
     /**
      * This test asserts if the initialization of the elevator system after the first update works as expected
+     *
      * @throws InterruptedException
      */
     @Test
@@ -83,9 +86,9 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         assertEquals(CommittedDirection.UNCOMMITTED.getPrintValue(), displayedElevator.elevatorDirection.getText().trim());
 
         // Check elevator/floors representation
-        GridPane elevatorGrid =  (GridPane)displayedElevator.gridContainer.getChildren().get(0);
+        GridPane elevatorGrid = (GridPane) displayedElevator.gridContainer.getChildren().get(0);
         // 20 cells and -1 for the Group that is the gridpane per default
-        assertEquals(20, elevatorGrid.getChildren().size()-1);
+        assertEquals(20, elevatorGrid.getChildren().size() - 1);
         // Check if elevator image is at the right position
         StackPane elevatorImgContainer = (StackPane) getNodeFromGridPane(elevatorGrid, 1, 9);
         assertNotNull(elevatorImgContainer.getChildren());
@@ -114,16 +117,16 @@ public class DashboardElevatorGUITest extends ApplicationTest {
 
         displayedElevator.manualInput.setText("0");
         displayedElevator.sendRequest();
-        verify(management, never()).floorSelected(Mockito.anyInt(),Mockito.anyInt());
+        verify(management, never()).floorSelected(Mockito.anyInt(), Mockito.anyInt());
         verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
-        verify(rmiMock, never()).setTarget(Mockito.anyInt(),Mockito.anyInt());
+        verify(rmiMock, never()).setTarget(Mockito.anyInt(), Mockito.anyInt());
         verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
 
         displayedElevator.manualInput.setText("11");
         displayedElevator.sendRequest();
-        verify(management, never()).floorSelected(Mockito.anyInt(),Mockito.anyInt());
+        verify(management, never()).floorSelected(Mockito.anyInt(), Mockito.anyInt());
         verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
-        verify(rmiMock, never()).setTarget(Mockito.anyInt(),Mockito.anyInt());
+        verify(rmiMock, never()).setTarget(Mockito.anyInt(), Mockito.anyInt());
         verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
     }
 
@@ -137,14 +140,14 @@ public class DashboardElevatorGUITest extends ApplicationTest {
 
         displayedElevator.manualInput.setText("1");
         displayedElevator.sendRequest();
-        verify(management, times(1)).floorSelected(0,0);
+        verify(management, times(1)).floorSelected(0, 0);
         verify(management, never()).changeCommittedDirection(Mockito.anyInt(), any());
         verify(rmiMock, times(1)).setTarget(0, 0);
         verify(rmiMock, never()).setCommittedDirection(Mockito.anyInt(), anyInt());
 
         displayedElevator.manualInput.setText("10");
         displayedElevator.sendRequest();
-        verify(management, times(1)).floorSelected(0,9);
+        verify(management, times(1)).floorSelected(0, 9);
         verify(management, times(1)).changeCommittedDirection(0, CommittedDirection.UP);
         verify(rmiMock, times(1)).setTarget(0, 9);
         verify(rmiMock, times(1)).setCommittedDirection(0, CommittedDirection.UP.getRawValue());
@@ -163,5 +166,33 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         Semaphore semaphore = new Semaphore(0);
         Platform.runLater(semaphore::release);
         semaphore.acquire();
+    }
+
+    @Test
+    public void testAutoModeActivation() throws InterruptedException {
+        controller.setUiListener(management);
+        management.pollElevatorSystem();
+
+        waitForRunLater();
+
+        ElevatorController displayedElevator = controller.getElevators().get(0);
+        //test one time activate and one time disactivate auto mode
+        //select
+        displayedElevator.enableAuto.setSelected(true);
+        displayedElevator.changeAutoMode();
+
+        //test if manual input disabled
+        assertTrue(displayedElevator.manualInput.isDisabled());
+        assertTrue(displayedElevator.manualSend.isDisabled());
+
+
+        //deselect
+        displayedElevator.enableAuto.setSelected(false);
+        displayedElevator.changeAutoMode();
+        //test if manual input disabled
+        assertFalse(displayedElevator.manualInput.isDisabled());
+        assertFalse(displayedElevator.manualSend.isDisabled());
+
+
     }
 }

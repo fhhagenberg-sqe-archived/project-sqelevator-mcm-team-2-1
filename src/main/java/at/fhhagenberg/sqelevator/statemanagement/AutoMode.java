@@ -83,11 +83,11 @@ public class AutoMode {
     /**
      * Calculates the next floor to go to based on the pressed buttons and the actual load
      *
-     * @param actElevator
-     * @param elevatorSystem
-     * @param actualFloor
-     * @param direction
-     * @return
+     * @param actElevator       the elevator choosen
+     * @param elevatorSystem    the whole elevatorSystem
+     * @param actualFloor       the actualFloor selected
+     * @param direction         the direction the elevator is actually going to
+     * @return                  next floor to go to
      */
     private int getNextFloor(Elevator actElevator, ElevatorSystem elevatorSystem,
                              int actualFloor, CommittedDirection direction) {
@@ -130,14 +130,14 @@ public class AutoMode {
     /**
      * Loop until the next floor to search for
      *
-     * @param nextFloor
-     * @param actualFloor
-     * @param endFloor
-     * @param plusMinus
-     * @param direction
-     * @param elevatorSystem
-     * @param actElevator
-     * @return
+     * @param nextFloor         the next floor to go to - to check if already chosen
+     * @param actualFloor       the actual floor to test for
+     * @param endFloor          the end floor for this direction
+     * @param plusMinus         the increment or decrement
+     * @param direction         the direction to go to next
+     * @param elevatorSystem    the whole elevator system
+     * @param actElevator       the chosen elevator
+     * @return                  the next floor to go to
      */
     public int searchNextFloorLoop(int nextFloor, int actualFloor, int endFloor, int plusMinus,
                                    CommittedDirection direction, ElevatorSystem elevatorSystem, Elevator actElevator) {
