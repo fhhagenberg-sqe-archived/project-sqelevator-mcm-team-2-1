@@ -96,7 +96,7 @@ public class ElevatorController implements Initializable, ElevatorChangeListener
         elevator.setAutomaticModeActive(autoOn);
         uiActionListener.setAutoMode(elevator.getId(), autoOn);
 
-        System.out.println("Automatic mode: " + autoOn.toString());
+        LoggerFactory.getLogger(ElevatorController.class).info("Automatic mode: " + autoOn.toString());
     }
 	
 	/**

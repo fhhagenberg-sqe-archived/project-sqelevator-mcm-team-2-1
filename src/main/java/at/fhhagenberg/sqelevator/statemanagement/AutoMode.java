@@ -5,6 +5,7 @@ import at.fhhagenberg.sqelevator.model.Elevator;
 import at.fhhagenberg.sqelevator.model.ElevatorSystem;
 import at.fhhagenberg.sqelevator.model.states.ButtonState;
 import at.fhhagenberg.sqelevator.model.states.CommittedDirection;
+import org.slf4j.LoggerFactory;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
@@ -71,10 +72,10 @@ public class AutoMode {
                 if (nextFloor != Integer.MAX_VALUE && nextFloor >= 0) {
                     management.changeCommittedDirection(actElevator.getId(), actualDirection);
                     management.floorSelected(actElevator.getId(), nextFloor);
-                    System.out.println("Set next floor to " + nextFloor + "; Direction: " + actualDirection.getPrintValue());
+                    LoggerFactory.getLogger(AutoMode.class).info("Set next floor to " + nextFloor + "; Direction: " + actualDirection.getPrintValue());
                 } else {
                     actElevator.setCommittedDirection(CommittedDirection.UNCOMMITTED);
-                    System.out.println("Set Direction to: " + actualDirection.getPrintValue() + "; nextFloor: " + nextFloor);
+                    LoggerFactory.getLogger(AutoMode.class).info("Set Direction to: " + actualDirection.getPrintValue() + "; nextFloor: " + nextFloor);
                 }
             }
         }
@@ -145,12 +146,14 @@ public class AutoMode {
         while (nextFloor == Integer.MAX_VALUE && actualFloor != endFloor) {
             //if not full --> get the next floor in the direction, where someone wants to go the same direction
             //if(actElevator.getWeight() < (actElevator.getCapacity()*80)){
-            ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
-            if ((bs == ButtonState.BOTH)
-                    || ((bs == ButtonState.DOWN) && (direction == CommittedDirection.DOWN))
-                    || ((bs == ButtonState.UP) && (direction == CommittedDirection.UP))
-            ) {
-                nextFloor = actualFloor;
+            if(actElevator.getCapacity()*80 < actElevator.getWeight()) {
+                ButtonState bs = elevatorSystem.getFloorButtons().get(actualFloor);
+                if ((bs == ButtonState.BOTH)
+                        || ((bs == ButtonState.DOWN) && (direction == CommittedDirection.DOWN))
+                        || ((bs == ButtonState.UP) && (direction == CommittedDirection.UP))
+                ) {
+                    nextFloor = actualFloor;
+                }
             }
             //}
 
