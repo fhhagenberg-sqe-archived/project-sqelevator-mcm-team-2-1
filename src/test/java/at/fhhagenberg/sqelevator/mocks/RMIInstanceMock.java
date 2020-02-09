@@ -109,17 +109,19 @@ public class RMIInstanceMock implements IElevator {
 
     @Override
     public void setCommittedDirection(int elevatorNumber, int direction) throws RemoteException {
-
+        elevator1.setCommittedDirection(CommittedDirection.fromInteger(direction));
     }
 
     @Override
-    public void setServicesFloors(int elevatorNumber, int floor, boolean service) throws RemoteException {
-
+    public void setServicedFloors(int elevatorNumber, int floor, boolean service) throws RemoteException {
+        HashMap<Integer, Boolean> buttons = elevator1.getButtons();
+        buttons.replace(floor, service);
+        elevator1.setButtons(buttons);
     }
 
     @Override
     public void setTarget(int elevatorNumber, int target) throws RemoteException {
-
+        elevator1.setTarget(target);
     }
 
     @Override

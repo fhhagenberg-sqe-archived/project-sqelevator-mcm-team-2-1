@@ -189,7 +189,7 @@ public class DashboardElevatorGUITest extends ApplicationTest {
         //deselect
         displayedElevator.enableAuto.setSelected(false);
         displayedElevator.changeAutoMode();
-        //test if manual input disabled
+        //test if manual input enabled
         assertFalse(displayedElevator.manualInput.isDisabled());
         assertFalse(displayedElevator.manualSend.isDisabled());
 

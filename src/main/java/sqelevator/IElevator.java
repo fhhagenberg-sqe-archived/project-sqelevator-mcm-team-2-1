@@ -216,7 +216,7 @@ public interface IElevator extends java.rmi.Remote {
 	 * @param floor floor whose service by the specified elevator is being set
 	 * @param service indicates whether the floor is serviced by the specified elevator (yes=true,no=false)
 	 */
-	public void setServicesFloors(int elevatorNumber, int floor, boolean service) throws java.rmi.RemoteException; 
+	public void setServicedFloors(int elevatorNumber, int floor, boolean service) throws java.rmi.RemoteException;
 
 	/**
 	 * Sets the floor target of the specified elevator. 

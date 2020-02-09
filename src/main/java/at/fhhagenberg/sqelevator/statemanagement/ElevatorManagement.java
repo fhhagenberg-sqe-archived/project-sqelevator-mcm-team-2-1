@@ -68,6 +68,7 @@ public class ElevatorManagement implements UIActionListener {
         this.elevatorSystem = new ElevatorSystem();
         this.autoActive = false;
         if (polling) initPolling();
+        autoMode = new AutoMode(this, rmiInstance);
     }
 
     private void initPolling() {
