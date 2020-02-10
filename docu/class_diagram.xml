@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagrams>
+  <diagram name="communication">
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.ElevatorChangeListener" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.UIActionListener" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.gui.DashboardController" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.gui.ElevatorController" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.launcher.ElevatorApplication" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.ButtonState" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.CommittedDirection" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.DoorStatus" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.Elevator" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.ElevatorSystem" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.statemanagement.AutoMode" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement" />
+    <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="sqelevator.IElevator" />
+    <command command-class="de.frag.umlplugin.uml.command.ConnectClassesUsedCommand" />
+    <compartment-visibility />
+  </diagram>
+</diagrams>
+

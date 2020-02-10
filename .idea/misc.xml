@@ -13,4 +13,30 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_13" default="false" project-jdk-name="1.13" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/target" />
   </component>
+  <component name="UMLDiagramComponent">
+    <diagram name="full uml diagram">
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.launcher.ElevatorApplication" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.gui.DashboardController" />
+      <compartment-visibility />
+    </diagram>
+    <diagram name="communication">
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.ElevatorChangeListener" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.ElevatorSystemChangeListener" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.communication.UIActionListener" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.connection.RMIElevatorServiceFetcher" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.gui.DashboardController" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.gui.ElevatorController" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.launcher.ElevatorApplication" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.ButtonState" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.CommittedDirection" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.states.DoorStatus" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.Elevator" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.model.ElevatorSystem" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.statemanagement.AutoMode" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="at.fhhagenberg.sqelevator.statemanagement.ElevatorManagement" />
+      <command command-class="de.frag.umlplugin.uml.command.AddClassCommand" psi-class="sqelevator.IElevator" />
+      <command command-class="de.frag.umlplugin.uml.command.ConnectClassesUsedCommand" />
+      <compartment-visibility />
+    </diagram>
+  </component>
 </project>
