@@ -7,4 +7,11 @@ Group assignment SQElevator
 - Manual Mode
 
 #### Sonar cloud report part Martin:
-![](docu/sonarcloud_part_martin.PNG)git sta
+![](docu/sonarcloud_part_martin.PNG)
+
+### Part Christoph
+- UI: clean exit on close added
+- Automatic Mode (and tests)
+
+#### Sonar cloud report part Christoph:
+![](docu/sonarcloud_part_christoph.PNG)
