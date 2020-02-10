@@ -12,6 +12,7 @@ Group assignment SQElevator
 ### Part Christoph
 - UI: clean exit on close added
 - Automatic Mode (and tests)
+- Class diagram final
 
 #### Sonar cloud report part Christoph:
 ![](docu/sonarcloud_part_christoph.PNG)
