@@ -13,5 +13,5 @@ Group assignment SQElevator
 - UI: clean exit on close added
 - Automatic Mode (and tests)
 
-#### Sonar cloud report part Martin:
+#### Sonar cloud report part Christoph:
 ![](docu/sonarcloud_part_christoph.PNG)
